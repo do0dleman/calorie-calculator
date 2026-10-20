@@ -1,0 +1,32 @@
+allowBuilds:
+  esbuild: true
+  lightningcss: true
+  better-sqlite3: true
+  '@google/genai': true
+  protobufjs: true
+  unrs-resolver: true
+minimumReleaseAgeExclude:
+  - '@tanstack/ai-anthropic@0.22.1'
+  - '@tanstack/ai-client@0.40.0'
+  - '@tanstack/ai-gemini@0.38.1'
+  - '@tanstack/ai-ollama@0.12.1'
+  - '@tanstack/ai-openai@0.30.1'
+  - '@tanstack/ai-react@0.31.0'
+  - '@tanstack/ai-utils@0.5.0'
+  - '@tanstack/ai@0.70.0'
+  - '@tanstack/openai-base@0.15.0'
+  - '@tanstack/query-core@5.104.5'
+  - '@tanstack/query-devtools@5.104.5'
+  - '@tanstack/react-query-devtools@5.104.5'
+  - '@tanstack/react-query@5.104.5'
+permissions:
+  '@tanstack/ai':
+    skills: true
+  '@tanstack/devtools-event-client':
+    skills: true
+  '@tanstack/devtools-vite':
+    skills: true
+  '@tanstack/react-start':
+    skills: true
+  dotenv:
+    skills: true
