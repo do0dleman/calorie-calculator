@@ -1,0 +1,9 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "home_page": "Sākumlapa",
+  "about_page": "Par mums",
+  "example_message": "Laipni lūdzam tavā i18n lietotnē.",
+  "language_label": "Valoda",
+  "current_locale": "Pašreizējā valoda: {locale}",
+  "learn_router": "Apgūsti Paraglide JS"
+}
