@@ -3,7 +3,7 @@ import { user } from './auth'
 
 export const mealSourceEnum = pgEnum('meal_source', ['manual', 'picture'])
 
-export const meal = pgTable('user', {
+export const meal = pgTable('meal', {
   id: text('id').primaryKey(),
   userId: text('id')
     .references(() => user.id, { onDelete: 'cascade' })
