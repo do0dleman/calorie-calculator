@@ -16,7 +16,7 @@ import type { ChatMessages } from '#/lib/demo-ai-hook'
 import { useAudioRecorder } from '#/hooks/demo-useAudioRecorder'
 import { useTTS } from '#/hooks/demo-useTTS'
 
-import GuitarRecommendation from '#/components/demo-GuitarRecommendation'
+import GuitarRecommendation from '#/components/demo_guitar_recommendation'
 
 import './ai-chat.css'
 

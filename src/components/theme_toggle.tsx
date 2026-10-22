@@ -31,7 +31,7 @@ function applyThemeMode(mode: ThemeMode) {
   document.documentElement.style.colorScheme = resolved
 }
 
-export default function ThemeToggle() {
+export function useThemeMode() {
   const [mode, setMode] = useState<ThemeMode>('auto')
 
   useEffect(() => {
@@ -54,13 +54,23 @@ export default function ThemeToggle() {
     }
   }, [mode])
 
-  function toggleMode() {
-    const nextMode: ThemeMode =
-      mode === 'light' ? 'dark' : mode === 'dark' ? 'auto' : 'light'
+  function selectMode(nextMode: ThemeMode) {
     setMode(nextMode)
     applyThemeMode(nextMode)
     window.localStorage.setItem('theme', nextMode)
   }
+
+  function toggleMode() {
+    const nextMode: ThemeMode =
+      mode === 'light' ? 'dark' : mode === 'dark' ? 'auto' : 'light'
+    selectMode(nextMode)
+  }
+
+  return { mode, selectMode, toggleMode }
+}
+
+export default function ThemeToggle() {
+  const { mode, toggleMode } = useThemeMode()
 
   const label =
     mode === 'auto'

@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 
-import { showAIAssistant } from './demo-AIAssistant'
+import { showAIAssistant } from './demo_ai_assistant'
 
 import guitars from '#/data/demo-guitars'
 
