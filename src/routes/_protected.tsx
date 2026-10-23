@@ -1,4 +1,4 @@
-import { getSession } from '#/lib/auth.server'
+import { getSession } from '#/lib/auth.functions'
 import { createFileRoute, redirect, Outlet } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected')({
