@@ -61,7 +61,7 @@ export default function AvatarMenu() {
   if (!session) {
     return (
       <Button asChild variant={'secondary'}>
-        <Link to="/demo/better-auth">
+        <Link to="/login">
           <LogInIcon />
           Sign in
         </Link>
