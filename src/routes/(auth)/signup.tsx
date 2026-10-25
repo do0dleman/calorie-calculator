@@ -76,7 +76,7 @@ function SignupPage() {
 
   return (
     <main className="mx-auto flex min-h-[calc(100vh-8rem)] w-full max-w-md items-center px-4 py-10">
-      <Card className="w-full border-(--line) bg-(--surface-strong) text-(--sea-ink) shadow-sm">
+      <Card className="w-full border-border bg-card text-foreground shadow-sm">
         <CardHeader>
           <CardTitle className="font-serif text-2xl tracking-tight">
             Create an account
@@ -242,13 +242,13 @@ function SignupPage() {
             </form.Subscribe>
           </form>
         </CardContent>
-        <CardFooter className="text-sm text-(--sea-ink-soft)">
+        <CardFooter className="text-sm text-muted-foreground">
           <p>
             Already have an account?{' '}
             <Link
               to="/login"
               search={{ redirect: redirectTo }}
-              className="font-medium text-(--lagoon-deep) underline-offset-4 hover:underline"
+              className="font-medium text-primary underline-offset-4 hover:underline"
             >
               Sign in
             </Link>

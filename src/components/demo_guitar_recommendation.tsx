@@ -20,14 +20,14 @@ export default function GuitarRecommendation({ id }: { id: string }) {
         />
       </div>
       <div className="p-4">
-        <h3 className="mb-2 text-lg font-semibold text-[var(--sea-ink)]">
+        <h3 className="mb-2 text-lg font-semibold text-foreground">
           {guitar.name}
         </h3>
         <p className="demo-muted mb-3 line-clamp-2 text-sm">
           {guitar.shortDescription}
         </p>
         <div className="flex items-center justify-between">
-          <div className="text-lg font-bold text-[var(--lagoon-deep)]">
+          <div className="text-lg font-bold text-primary">
             ${guitar.price}
           </div>
           <button

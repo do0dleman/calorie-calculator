@@ -36,7 +36,7 @@ function Messages({ messages }: { messages: ChatMessages }) {
         <div
           key={id}
           className={`py-3 ${
-            role === 'assistant' ? 'bg-[var(--chip-bg)]' : 'bg-transparent'
+            role === 'assistant' ? 'bg-muted' : 'bg-transparent'
           }`}
         >
           {parts.map((part, index) => {
@@ -44,15 +44,15 @@ function Messages({ messages }: { messages: ChatMessages }) {
               return (
                 <div key={index} className="flex items-start gap-2 px-4">
                   {role === 'assistant' ? (
-                    <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg bg-[var(--lagoon-deep)] text-xs font-medium text-white">
+                    <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg bg-primary text-xs font-medium text-primary-foreground">
                       AI
                     </div>
                   ) : (
-                    <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg bg-[var(--sea-ink-soft)] text-xs font-medium text-white">
+                    <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg bg-muted-foreground text-xs font-medium text-background">
                       Y
                     </div>
                   )}
-                  <div className="min-w-0 flex-1 max-w-none text-sm text-[var(--sea-ink)]">
+                  <div className="min-w-0 flex-1 max-w-none text-sm text-foreground">
                     <Streamdown>{part.content}</Streamdown>
                   </div>
                 </div>
@@ -96,13 +96,13 @@ export default function AIAssistant() {
 
       {isOpen && (
         <div className="demo-panel fixed inset-x-4 top-20 z-[100] flex h-[calc(100vh-6rem)] max-h-[600px] flex-col overflow-hidden p-0 sm:left-auto sm:w-[min(calc(100vw-2rem),700px)]">
-          <div className="flex items-center justify-between border-b border-[var(--line)] p-3">
-            <h3 className="font-semibold text-[var(--sea-ink)]">
+          <div className="flex items-center justify-between border-b border-border p-3">
+            <h3 className="font-semibold text-foreground">
               AI Assistant
             </h3>
             <button
               onClick={() => showAIAssistant.setState((state) => !state)}
-              className="demo-muted transition-colors hover:text-[var(--sea-ink)]"
+              className="text-muted-foreground transition-colors hover:text-foreground"
             >
               <X className="w-4 h-4" />
             </button>
@@ -110,7 +110,7 @@ export default function AIAssistant() {
 
           <Messages messages={messages} />
 
-          <div className="border-t border-[var(--line)] p-3">
+          <div className="border-t border-border p-3">
             <form
               onSubmit={(e) => {
                 e.preventDefault()
@@ -145,7 +145,7 @@ export default function AIAssistant() {
                 <button
                   type="submit"
                   disabled={!input.trim()}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-[var(--lagoon-deep)] transition-colors hover:text-[var(--sea-ink)] disabled:text-[var(--sea-ink-soft)]"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-primary transition-colors hover:text-foreground disabled:text-muted-foreground"
                 >
                   <Send className="w-4 h-4" />
                 </button>
