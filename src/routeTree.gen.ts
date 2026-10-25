@@ -13,7 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as authSignupRouteImport } from './routes/(auth)/signup'
-import { Route as ProtectedTestRouteImport } from './routes/_protected/test'
+import { Route as ProtectedChatRouteImport } from './routes/_protected/chat'
+import { Route as ProtectedOverviewRouteImport } from './routes/_protected/overview'
+import { Route as ProtectedSettingsRouteImport } from './routes/_protected/settings'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -35,9 +37,19 @@ const authSignupRoute = authSignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProtectedTestRoute = ProtectedTestRouteImport.update({
-  id: '/test',
-  path: '/test',
+const ProtectedChatRoute = ProtectedChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedOverviewRoute = ProtectedOverviewRouteImport.update({
+  id: '/overview',
+  path: '/overview',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -50,14 +62,18 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
-  '/test': typeof ProtectedTestRoute
+  '/chat': typeof ProtectedChatRoute
+  '/overview': typeof ProtectedOverviewRoute
+  '/settings': typeof ProtectedSettingsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
-  '/test': typeof ProtectedTestRoute
+  '/chat': typeof ProtectedChatRoute
+  '/overview': typeof ProtectedOverviewRoute
+  '/settings': typeof ProtectedSettingsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
@@ -66,21 +82,39 @@ export interface FileRoutesById {
   '/_protected': typeof ProtectedRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
-  '/_protected/test': typeof ProtectedTestRoute
+  '/_protected/chat': typeof ProtectedChatRoute
+  '/_protected/overview': typeof ProtectedOverviewRoute
+  '/_protected/settings': typeof ProtectedSettingsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/signup' | '/test' | '/api/auth/$'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/chat'
+    | '/overview'
+    | '/settings'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/signup' | '/test' | '/api/auth/$'
+  to:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/chat'
+    | '/overview'
+    | '/settings'
+    | '/api/auth/$'
   id:
     | '__root__'
     | '/'
     | '/_protected'
     | '/(auth)/login'
     | '/(auth)/signup'
-    | '/_protected/test'
+    | '/_protected/chat'
+    | '/_protected/overview'
+    | '/_protected/settings'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
@@ -122,11 +156,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignupRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_protected/test': {
-      id: '/_protected/test'
-      path: '/test'
-      fullPath: '/test'
-      preLoaderRoute: typeof ProtectedTestRouteImport
+    '/_protected/chat': {
+      id: '/_protected/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ProtectedChatRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/overview': {
+      id: '/_protected/overview'
+      path: '/overview'
+      fullPath: '/overview'
+      preLoaderRoute: typeof ProtectedOverviewRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/settings': {
+      id: '/_protected/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof ProtectedSettingsRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/api/auth/$': {
@@ -140,11 +188,15 @@ declare module '@tanstack/react-router' {
 }
 
 interface ProtectedRouteChildren {
-  ProtectedTestRoute: typeof ProtectedTestRoute
+  ProtectedChatRoute: typeof ProtectedChatRoute
+  ProtectedOverviewRoute: typeof ProtectedOverviewRoute
+  ProtectedSettingsRoute: typeof ProtectedSettingsRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
-  ProtectedTestRoute: ProtectedTestRoute,
+  ProtectedChatRoute: ProtectedChatRoute,
+  ProtectedOverviewRoute: ProtectedOverviewRoute,
+  ProtectedSettingsRoute: ProtectedSettingsRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
