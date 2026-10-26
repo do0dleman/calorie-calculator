@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { Camera, ImageIcon, PenLine, Plus } from 'lucide-react'
 
@@ -10,9 +10,12 @@ import {
   DropdownMenuTrigger,
 } from '#/components/ui/dropdown-menu'
 
+import { ManualMealDialog } from './manual_meal_dialog'
+
 export function AttachmentMenu({ onPick }: { onPick: (file: File) => void }) {
   const cameraRef = useRef<HTMLInputElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
+  const [mealOpen, setMealOpen] = useState(false)
 
   function onPicked(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
@@ -42,7 +45,7 @@ export function AttachmentMenu({ onPick }: { onPick: (file: File) => void }) {
             <ImageIcon />
             File
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setMealOpen(true)}>
             <PenLine />
             By hand
           </DropdownMenuItem>
@@ -63,6 +66,12 @@ export function AttachmentMenu({ onPick }: { onPick: (file: File) => void }) {
         accept="image/*"
         className="hidden"
         onChange={onPicked}
+      />
+
+      <ManualMealDialog
+        open={mealOpen}
+        onOpenChange={setMealOpen}
+        onCreate={async () => {}}
       />
     </>
   )
