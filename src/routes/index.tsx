@@ -75,8 +75,8 @@ const techGroups = [
 
 function App() {
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-col gap-20 px-4 pt-12 pb-24 sm:px-6 lg:gap-24 lg:pt-20">
-      <section className="flex flex-col items-start gap-6 lg:py-8">
+    <main className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 pt-12 pb-16 sm:px-6 lg:gap-14 lg:pt-20">
+      <section className="flex flex-col items-start gap-6 lg:pb-4">
         <h1 className="max-w-4xl text-4xl leading-[1.05] font-extrabold tracking-tight text-balance sm:text-6xl lg:text-7xl">
           {m.landing_heading()}
         </h1>
@@ -109,7 +109,7 @@ function App() {
         </ul>
       </Section>
 
-      <section className="flex flex-col gap-8 border-t border-border pt-10">
+      <section className="flex flex-col gap-8 border-t border-border pt-8">
         <h2 className="text-2xl font-bold tracking-tight">
           {m.tech_heading()}
         </h2>
@@ -146,7 +146,7 @@ function Section({
   children: ReactNode
 }) {
   return (
-    <section className="grid gap-8 border-t border-border pt-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-16">
+    <section className="grid gap-8 border-t border-border pt-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-16">
       <h2 className="text-2xl font-bold tracking-tight">{heading}</h2>
       <div className="min-w-0">{children}</div>
     </section>
