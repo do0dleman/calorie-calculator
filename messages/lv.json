@@ -39,5 +39,8 @@
   "tech_hosting": "Mitināšana",
   "about_text": "Izstrādāts RTU studiju kursam \"Programmatūras izstrādes tehnoloģija\" kā iepriekšējos uzdevumos aprakstītās lietotnes prototips.",
   "theme_toggle": "Pārslēgt gaišo un tumšo motīvu",
-  "language_switch": "Pārslēgt uz angļu valodu"
+  "language_switch": "Pārslēgt uz angļu valodu",
+  "nav_overview": "Pārskats",
+  "nav_chat": "Tērzēšana",
+  "nav_settings": "Iestatījumi"
 }
