@@ -116,12 +116,6 @@ function App() {
           ))}
         </dl>
       </Section>
-
-      <Section heading={m.about_heading()}>
-        <p className="max-w-prose text-lg leading-relaxed text-muted-foreground">
-          {m.about_text()}
-        </p>
-      </Section>
     </main>
   )
 }
