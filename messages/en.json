@@ -36,5 +36,6 @@
   "tech_i18n": "Translations",
   "tech_build": "Build and server",
   "tech_hosting": "Hosting",
-  "about_text": "Built for the RTU course \"Programmatūras izstrādes tehnoloģija\" as a prototype of the app described in the previous assignments."
+  "about_text": "Built for the RTU course \"Programmatūras izstrādes tehnoloģija\" as a prototype of the app described in the previous assignments.",
+  "theme_toggle": "Switch between light and dark theme"
 }

@@ -75,7 +75,7 @@ const techGroups = [
 
 function App() {
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 pt-12 pb-16 sm:px-6 lg:gap-14 lg:pt-20">
+    <main className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 pt-20 pb-16 sm:px-6 lg:gap-14 lg:pt-20">
       <section className="flex flex-col items-start gap-6 lg:pb-4">
         <h1 className="max-w-4xl text-4xl leading-[1.05] font-extrabold tracking-tight text-balance sm:text-6xl lg:text-7xl">
           {m.landing_heading()}

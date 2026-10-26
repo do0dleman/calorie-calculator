@@ -6,6 +6,7 @@ import {
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import Footer from '../components/footer'
+import ThemeToggle from '../components/theme_toggle'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
@@ -62,7 +63,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="font-sans antialiased">
+      <body className="relative bg-background font-sans text-foreground antialiased">
+        <div className="absolute top-4 right-4 z-10 sm:top-6 sm:right-6">
+          <ThemeToggle />
+        </div>
         {children}
         <Footer />
         <TanStackDevtools
