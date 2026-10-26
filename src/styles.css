@@ -123,15 +123,3 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* Landing page overview mockup: fills the calorie ring and macro bars once on load */
-@keyframes ring-fill {
-  from {
-    stroke-dashoffset: 100;
-  }
-}
-
-@keyframes bar-grow {
-  from {
-    transform: scaleX(0);
-  }
-}
