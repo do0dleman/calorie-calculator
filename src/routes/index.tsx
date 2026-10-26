@@ -105,10 +105,14 @@ function App() {
             ) : (
               <>
                 <Button asChild size="lg">
-                  <Link to="/signup">{m.landing_cta_signup()}</Link>
+                  <Link to="/signup" search={{ redirect: '/overview' }}>
+                    {m.landing_cta_signup()}
+                  </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline">
-                  <Link to="/login">{m.landing_cta_login()}</Link>
+                  <Link to="/login" search={{ redirect: '/overview' }}>
+                    {m.landing_cta_login()}
+                  </Link>
                 </Button>
               </>
             )}
