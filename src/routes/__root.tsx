@@ -2,10 +2,12 @@ import {
   HeadContent,
   Scripts,
   createRootRouteWithContext,
+  useRouterState,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import Footer from '../components/footer'
+import Header from '../components/header'
 import LanguageToggle from '../components/language_toggle'
 import ThemeToggle from '../components/theme_toggle'
 
@@ -58,6 +60,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  // The landing page is an information page, so it gets the bare toggles instead of the app header
+  const isLanding = useRouterState({
+    select: (state) => state.location.pathname === '/',
+  })
+
   return (
     <html lang={getLocale()} suppressHydrationWarning>
       <head>
@@ -65,10 +72,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="relative bg-background font-sans text-foreground antialiased">
-        <div className="absolute top-4 right-4 z-10 flex gap-2 sm:top-6 sm:right-6">
-          <LanguageToggle />
-          <ThemeToggle />
-        </div>
+        {isLanding ? (
+          <div className="absolute top-4 right-4 z-10 flex gap-2 sm:top-6 sm:right-6">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
+        ) : (
+          <Header />
+        )}
         {children}
         <Footer />
         <TanStackDevtools
