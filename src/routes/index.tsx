@@ -1,4 +1,5 @@
 import { Button } from '#/components/ui/button'
+import { cn } from '#/lib/utils'
 import { m } from '#/paraglide/messages'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import {
@@ -88,7 +89,7 @@ function App() {
         </ul>
       </Section>
 
-      <Section heading={m.tech_heading()}>
+      <Section heading={m.tech_heading()} headingSide="right">
         <dl className="grid gap-x-10 sm:grid-cols-2">
           {techStack.map((tech) => (
             <div
@@ -107,14 +108,30 @@ function App() {
 
 function Section({
   heading,
+  headingSide = 'left',
   children,
 }: {
   heading: string
+  headingSide?: 'left' | 'right'
   children: ReactNode
 }) {
   return (
-    <section className="grid gap-8 border-t border-border pt-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-16">
-      <h2 className="text-2xl font-bold tracking-tight">{heading}</h2>
+    <section
+      className={cn(
+        'grid gap-8 border-t border-border pt-10 lg:gap-16',
+        headingSide === 'left'
+          ? 'lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]'
+          : 'lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]',
+      )}
+    >
+      <h2
+        className={cn(
+          'text-2xl font-bold tracking-tight',
+          headingSide === 'right' && 'lg:order-last lg:text-right',
+        )}
+      >
+        {heading}
+      </h2>
       <div className="min-w-0">{children}</div>
     </section>
   )
