@@ -1,8 +1,10 @@
 import { useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
+import { useServerFn } from '@tanstack/react-start'
 import { Camera, ImageIcon, PenLine, Plus } from 'lucide-react'
 
 import { Button } from '#/components/ui/button'
+import { createManualMeal } from '#/modules/meal/meal.functions'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +18,7 @@ export function AttachmentMenu({ onPick }: { onPick: (file: File) => void }) {
   const cameraRef = useRef<HTMLInputElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const [mealOpen, setMealOpen] = useState(false)
+  const saveMeal = useServerFn(createManualMeal)
 
   function onPicked(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
@@ -71,7 +74,9 @@ export function AttachmentMenu({ onPick }: { onPick: (file: File) => void }) {
       <ManualMealDialog
         open={mealOpen}
         onOpenChange={setMealOpen}
-        onCreate={async () => {}}
+        onCreate={async (meal) => {
+          await saveMeal({ data: meal })
+        }}
       />
     </>
   )
