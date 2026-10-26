@@ -62,7 +62,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="relative bg-background font-sans text-foreground antialiased">
+      <body className="relative bg-background font-sans text-foreground antialiased has-[[data-bottom-nav]]:pb-14 sm:has-[[data-bottom-nav]]:pb-0">
         {children}
         <Footer />
         <TanStackDevtools
