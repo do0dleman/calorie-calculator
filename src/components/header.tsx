@@ -26,9 +26,8 @@ function NavLinks({
           title={item.label()}
           className={`group ${className}`}
         >
-          {/* The current page gets a filled background around its icon */}
           <span
-            className={`flex items-center justify-center transition-colors group-data-[status=active]:bg-muted ${iconClassName}`}
+            className={`flex items-center justify-center transition-colors ${iconClassName}`}
           >
             <item.icon className="size-5" aria-hidden />
           </span>
@@ -49,21 +48,22 @@ export default function Header() {
           <nav className="hidden gap-1 sm:flex">
             <NavLinks
               className="flex"
-              iconClassName="size-9 rounded-md hover:bg-muted/60"
+              iconClassName="size-9 rounded-md group-data-[status=active]:bg-muted hover:bg-muted/60"
             />
           </nav>
           <AvatarMenu />
         </div>
       </header>
 
-      {/* On phones the navigation moves to a bar at the bottom of the screen */}
+      {/* On phones the navigation moves to a bar at the bottom of the screen;
+          the current page's whole section of the bar is highlighted */}
       <nav
         data-bottom-nav
         className="fixed inset-x-0 bottom-0 z-50 flex border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-lg sm:hidden"
       >
         <NavLinks
-          className="flex h-14 flex-1 items-center justify-center"
-          iconClassName="h-8 w-14 rounded-full"
+          className="flex h-14 flex-1 items-center justify-center transition-colors data-[status=active]:bg-muted"
+          iconClassName=""
         />
       </nav>
     </>
