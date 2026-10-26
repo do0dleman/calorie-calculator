@@ -9,7 +9,13 @@ const navItems = [
   { to: '/settings', label: m.nav_settings, icon: SettingsIcon },
 ] as const
 
-function NavLinks({ className }: { className: string }) {
+function NavLinks({
+  className,
+  iconClassName,
+}: {
+  className: string
+  iconClassName: string
+}) {
   return (
     <>
       {navItems.map((item) => (
@@ -18,9 +24,14 @@ function NavLinks({ className }: { className: string }) {
           to={item.to}
           aria-label={item.label()}
           title={item.label()}
-          className={className}
+          className={`group ${className}`}
         >
-          <item.icon className="size-5" aria-hidden />
+          {/* The current page gets a filled background around its icon */}
+          <span
+            className={`flex items-center justify-center transition-colors group-data-[status=active]:bg-muted ${iconClassName}`}
+          >
+            <item.icon className="size-5" aria-hidden />
+          </span>
         </Link>
       ))}
     </>
@@ -36,7 +47,10 @@ export default function Header() {
             {m.landing_title()}
           </Link>
           <nav className="hidden gap-1 sm:flex">
-            <NavLinks className="flex size-9 items-center justify-center rounded-md transition-colors hover:bg-muted" />
+            <NavLinks
+              className="flex"
+              iconClassName="size-9 rounded-md hover:bg-muted/60"
+            />
           </nav>
           <AvatarMenu />
         </div>
@@ -47,7 +61,10 @@ export default function Header() {
         data-bottom-nav
         className="fixed inset-x-0 bottom-0 z-50 flex border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-lg sm:hidden"
       >
-        <NavLinks className="flex h-14 flex-1 items-center justify-center" />
+        <NavLinks
+          className="flex h-14 flex-1 items-center justify-center"
+          iconClassName="h-8 w-14 rounded-full"
+        />
       </nav>
     </>
   )
