@@ -5,6 +5,8 @@ export const env = createEnv({
   server: {
     SERVER_URL: z.url().optional(),
     DATABASE_URL: z.url(),
+    BETTER_AUTH_URL: z.url().optional(),
+    VERCEL_URL: z.url().optional(),
   },
 
   /**
