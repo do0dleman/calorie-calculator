@@ -49,5 +49,9 @@
   "overview_fat": "Fat",
   "overview_carbs": "Carbs",
   "overview_meals_count": "Meals logged today: {count}",
-  "overview_empty": "No meals logged today"
+  "overview_empty": "No meals logged today",
+  "overview_eaten": "Eaten",
+  "overview_remaining": "Remaining",
+  "overview_goal_chart_title": "Share of daily goal",
+  "overview_goal_note": "Goals are fixed for now: EU reference intakes for an average adult."
 }
