@@ -1,5 +1,4 @@
 import { Button } from '#/components/ui/button'
-import { cn } from '#/lib/utils'
 import { m } from '#/paraglide/messages'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import {
@@ -40,17 +39,38 @@ const features = [
   },
 ] as const
 
-const techStack = [
-  { name: 'TanStack Start', role: m.tech_framework },
-  { name: 'React 19', role: m.tech_ui },
-  { name: 'TypeScript', role: m.tech_language },
-  { name: 'Tailwind CSS + shadcn/ui', role: m.tech_styling },
-  { name: 'PostgreSQL + Drizzle ORM', role: m.tech_database },
-  { name: 'Better Auth', role: m.tech_auth },
-  { name: 'TanStack AI', role: m.tech_ai },
-  { name: 'Paraglide JS', role: m.tech_i18n },
-  { name: 'Vite + Nitro', role: m.tech_build },
-  { name: 'Vercel', role: m.tech_hosting },
+const techGroups = [
+  {
+    label: m.tech_group_frontend,
+    tools: [
+      { name: 'React 19', role: m.tech_ui },
+      { name: 'Tailwind CSS + shadcn/ui', role: m.tech_styling },
+      { name: 'Paraglide JS', role: m.tech_i18n },
+      { name: 'TypeScript', role: m.tech_language },
+    ],
+  },
+  {
+    label: m.tech_group_backend,
+    tools: [
+      { name: 'TanStack Start', role: m.tech_framework },
+      { name: 'Better Auth', role: m.tech_auth },
+      { name: 'TanStack AI', role: m.tech_ai },
+    ],
+  },
+  {
+    label: m.tech_group_data,
+    tools: [
+      { name: 'PostgreSQL', role: m.tech_database },
+      { name: 'Drizzle ORM', role: m.tech_orm },
+    ],
+  },
+  {
+    label: m.tech_group_deployment,
+    tools: [
+      { name: 'Vite + Nitro', role: m.tech_build },
+      { name: 'Vercel', role: m.tech_hosting },
+    ],
+  },
 ] as const
 
 function App() {
@@ -89,49 +109,45 @@ function App() {
         </ul>
       </Section>
 
-      <Section heading={m.tech_heading()} headingSide="right">
-        <dl className="grid gap-x-10 sm:grid-cols-2">
-          {techStack.map((tech) => (
+      <section className="flex flex-col gap-8 border-t border-border pt-10">
+        <h2 className="text-2xl font-bold tracking-tight">
+          {m.tech_heading()}
+        </h2>
+        <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+          {techGroups.map((group) => (
             <div
-              key={tech.name}
-              className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-border py-3"
+              key={group.label()}
+              className="flex flex-col gap-5 border-t-2 border-brand pt-4"
             >
-              <dt className="font-medium">{tech.name}</dt>
-              <dd className="text-sm text-muted-foreground">{tech.role()}</dd>
+              <h3 className="font-semibold">{group.label()}</h3>
+              <dl className="flex flex-col gap-4">
+                {group.tools.map((tool) => (
+                  <div key={tool.name}>
+                    <dt className="font-medium">{tool.name}</dt>
+                    <dd className="text-sm text-muted-foreground">
+                      {tool.role()}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </div>
           ))}
-        </dl>
-      </Section>
+        </div>
+      </section>
     </main>
   )
 }
 
 function Section({
   heading,
-  headingSide = 'left',
   children,
 }: {
   heading: string
-  headingSide?: 'left' | 'right'
   children: ReactNode
 }) {
   return (
-    <section
-      className={cn(
-        'grid gap-8 border-t border-border pt-10 lg:gap-16',
-        headingSide === 'left'
-          ? 'lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]'
-          : 'lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]',
-      )}
-    >
-      <h2
-        className={cn(
-          'text-2xl font-bold tracking-tight',
-          headingSide === 'right' && 'lg:order-last lg:text-right',
-        )}
-      >
-        {heading}
-      </h2>
+    <section className="grid gap-8 border-t border-border pt-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-16">
+      <h2 className="text-2xl font-bold tracking-tight">{heading}</h2>
       <div className="min-w-0">{children}</div>
     </section>
   )
