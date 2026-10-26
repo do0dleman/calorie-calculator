@@ -42,5 +42,12 @@
   "language_switch": "Switch to Latvian",
   "nav_overview": "Overview",
   "nav_chat": "Chat",
-  "nav_settings": "Settings"
+  "nav_settings": "Settings",
+  "overview_title": "Today",
+  "overview_calories": "Calories",
+  "overview_protein": "Protein",
+  "overview_fat": "Fat",
+  "overview_carbs": "Carbs",
+  "overview_meals_count": "Meals logged today: {count}",
+  "overview_empty": "No meals logged today"
 }

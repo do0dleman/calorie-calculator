@@ -42,5 +42,12 @@
   "language_switch": "Pārslēgt uz angļu valodu",
   "nav_overview": "Pārskats",
   "nav_chat": "Tērzēšana",
-  "nav_settings": "Iestatījumi"
+  "nav_settings": "Iestatījumi",
+  "overview_title": "Šodien",
+  "overview_calories": "Kalorijas",
+  "overview_protein": "Olbaltumvielas",
+  "overview_fat": "Tauki",
+  "overview_carbs": "Ogļhidrāti",
+  "overview_meals_count": "Šodien reģistrētās ēdienreizes: {count}",
+  "overview_empty": "Šodien vēl nav reģistrētu ēdienreižu"
 }
