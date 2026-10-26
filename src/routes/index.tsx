@@ -1,5 +1,4 @@
 import { Button } from '#/components/ui/button'
-import { Card, CardContent } from '#/components/ui/card'
 import { getSession } from '#/lib/auth.functions'
 import { m } from '#/paraglide/messages'
 import { createFileRoute, Link } from '@tanstack/react-router'
@@ -45,13 +44,6 @@ const features = [
   },
 ] as const
 
-const steps = [
-  { title: m.step_signup_title, description: m.step_signup_description },
-  { title: m.step_log_title, description: m.step_log_description },
-  { title: m.step_overview_title, description: m.step_overview_description },
-  { title: m.step_chat_title, description: m.step_chat_description },
-] as const
-
 const techStack = [
   { name: 'TanStack Start', role: m.tech_framework },
   { name: 'React 19', role: m.tech_ui },
@@ -71,10 +63,6 @@ function App() {
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-col gap-20 px-4 pt-12 pb-24 sm:px-6 lg:gap-24 lg:pt-20">
       <section className="flex flex-col items-start gap-6 lg:py-8">
-        <p className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-          <span className="size-2 rounded-full bg-brand" aria-hidden />
-          {m.landing_badge()}
-        </p>
         <h1 className="max-w-4xl text-4xl leading-[1.05] font-extrabold tracking-tight text-balance sm:text-6xl lg:text-7xl">
           {m.landing_heading()}
         </h1>
@@ -113,35 +101,6 @@ function App() {
             </li>
           ))}
         </ul>
-      </Section>
-
-      <Section heading={m.how_to_heading()}>
-        <Card>
-          <CardContent>
-            <ol className="flex flex-col">
-              {steps.map((step, index) => (
-                <li
-                  key={step.title()}
-                  className="relative pb-8 pl-12 last:pb-0"
-                >
-                  {index < steps.length - 1 && (
-                    <span
-                      className="absolute top-9 bottom-1 left-4 w-px bg-border"
-                      aria-hidden
-                    />
-                  )}
-                  <span className="absolute top-0 left-0 flex size-8 items-center justify-center rounded-full border border-brand/40 text-sm font-semibold text-brand tabular-nums">
-                    {index + 1}
-                  </span>
-                  <h3 className="pt-1 font-semibold">{step.title()}</h3>
-                  <p className="mt-1 text-muted-foreground">
-                    {step.description()}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </CardContent>
-        </Card>
       </Section>
 
       <Section heading={m.tech_heading()}>

@@ -16,9 +16,6 @@ export default function Header() {
           <Link className="hover:underline" to="/chat">
             Chat
           </Link>
-          <Link className="hover:underline" to="/settings">
-            Settings
-          </Link>
         </nav>
         <AvatarMenu />
       </div>
