@@ -5,6 +5,8 @@ export const env = createEnv({
   server: {
     SERVER_URL: z.url().optional(),
     DATABASE_URL: z.url(),
+    BETTER_AUTH_URL: z.url().optional(),
+    VERCEL_URL: z.string().optional(),
   },
 
   /**
@@ -21,7 +23,7 @@ export const env = createEnv({
    * What object holds the environment variables at runtime. This is usually
    * `process.env` or `import.meta.env`.
    */
-  runtimeEnv: import.meta.env,
+  runtimeEnv: { ...import.meta.env, ...process.env },
 
   /**
    * By default, this library will feed the environment variables directly to
