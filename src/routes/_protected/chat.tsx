@@ -1,9 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_protected/chat')({
-  component: RouteComponent,
-})
+import { MealChat } from '#/modules/chat'
 
-function RouteComponent() {
-  return <div>Hello "/_protected/chat"!</div>
-}
+export const Route = createFileRoute('/_protected/chat')({
+  component: MealChat,
+})
