@@ -1,3 +1,5 @@
+import LanguageToggle from '#/components/language_toggle'
+import ThemeToggle from '#/components/theme_toggle'
 import { Button } from '#/components/ui/button'
 import { getSession } from '#/lib/auth.functions'
 import { m } from '#/paraglide/messages'
@@ -82,74 +84,80 @@ function App() {
   const { signedIn } = Route.useLoaderData()
 
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 pt-20 pb-16 sm:px-6 lg:gap-14 lg:pt-20">
-      <section className="flex flex-col items-start gap-6 lg:pb-4">
-        <h1 className="max-w-4xl text-4xl leading-[1.05] font-extrabold tracking-tight text-balance sm:text-6xl lg:text-7xl">
-          {m.landing_heading()}
-        </h1>
-        <p className="max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-          {m.landing_subheading()}
-        </p>
-        <div className="flex flex-wrap gap-3 pt-2">
-          {signedIn ? (
-            <Button asChild size="lg">
-              <Link to="/overview">{m.landing_cta_overview()}</Link>
-            </Button>
-          ) : (
-            <>
+    <>
+      <div className="absolute top-4 right-4 z-10 flex gap-2 sm:top-6 sm:right-6">
+        <LanguageToggle />
+        <ThemeToggle />
+      </div>
+      <main className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 pt-20 pb-16 sm:px-6 lg:gap-14 lg:pt-20">
+        <section className="flex flex-col items-start gap-6 lg:pb-4">
+          <h1 className="max-w-4xl text-4xl leading-[1.05] font-extrabold tracking-tight text-balance sm:text-6xl lg:text-7xl">
+            {m.landing_heading()}
+          </h1>
+          <p className="max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
+            {m.landing_subheading()}
+          </p>
+          <div className="flex flex-wrap gap-3 pt-2">
+            {signedIn ? (
               <Button asChild size="lg">
-                <Link to="/signup">{m.landing_cta_signup()}</Link>
+                <Link to="/overview">{m.landing_cta_overview()}</Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link to="/login">{m.landing_cta_login()}</Link>
-              </Button>
-            </>
-          )}
-        </div>
-      </section>
+            ) : (
+              <>
+                <Button asChild size="lg">
+                  <Link to="/signup">{m.landing_cta_signup()}</Link>
+                </Button>
+                <Button asChild size="lg" variant="outline">
+                  <Link to="/login">{m.landing_cta_login()}</Link>
+                </Button>
+              </>
+            )}
+          </div>
+        </section>
 
-      <Section heading={m.features_heading()}>
-        <ul className="grid gap-x-10 gap-y-10 sm:grid-cols-2">
-          {features.map((feature) => (
-            <li key={feature.title()} className="flex flex-col gap-3">
-              <span className="flex size-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
-                <feature.icon className="size-5" aria-hidden />
-              </span>
-              <h3 className="font-semibold">{feature.title()}</h3>
-              <p className="leading-relaxed text-muted-foreground">
-                {feature.description()}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </Section>
+        <Section heading={m.features_heading()}>
+          <ul className="grid gap-x-10 gap-y-10 sm:grid-cols-2">
+            {features.map((feature) => (
+              <li key={feature.title()} className="flex flex-col gap-3">
+                <span className="flex size-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
+                  <feature.icon className="size-5" aria-hidden />
+                </span>
+                <h3 className="font-semibold">{feature.title()}</h3>
+                <p className="leading-relaxed text-muted-foreground">
+                  {feature.description()}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Section>
 
-      <section className="flex flex-col gap-8 border-t border-border pt-8">
-        <h2 className="text-2xl font-bold tracking-tight">
-          {m.tech_heading()}
-        </h2>
-        <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-          {techGroups.map((group) => (
-            <div
-              key={group.label()}
-              className="flex flex-col gap-5 border-t-2 border-brand pt-4"
-            >
-              <h3 className="font-semibold">{group.label()}</h3>
-              <dl className="flex flex-col gap-4">
-                {group.tools.map((tool) => (
-                  <div key={tool.name}>
-                    <dt className="font-medium">{tool.name}</dt>
-                    <dd className="text-sm text-muted-foreground">
-                      {tool.role()}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          ))}
-        </div>
-      </section>
-    </main>
+        <section className="flex flex-col gap-8 border-t border-border pt-8">
+          <h2 className="text-2xl font-bold tracking-tight">
+            {m.tech_heading()}
+          </h2>
+          <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+            {techGroups.map((group) => (
+              <div
+                key={group.label()}
+                className="flex flex-col gap-5 border-t-2 border-brand pt-4"
+              >
+                <h3 className="font-semibold">{group.label()}</h3>
+                <dl className="flex flex-col gap-4">
+                  {group.tools.map((tool) => (
+                    <div key={tool.name}>
+                      <dt className="font-medium">{tool.name}</dt>
+                      <dd className="text-sm text-muted-foreground">
+                        {tool.role()}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
+    </>
   )
 }
 

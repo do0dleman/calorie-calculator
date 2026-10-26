@@ -1,3 +1,4 @@
+import Header from '#/components/header'
 import { getSession } from '#/lib/auth.functions'
 import { createFileRoute, redirect, Outlet } from '@tanstack/react-router'
 
@@ -14,5 +15,10 @@ export const Route = createFileRoute('/_protected')({
 
     return { user: session.user }
   },
-  component: () => <Outlet />,
+  component: () => (
+    <>
+      <Header />
+      <Outlet />
+    </>
+  ),
 })
