@@ -12,5 +12,6 @@ export const auth = betterAuth({
     enabled: true,
   },
   baseURL: env.BETTER_AUTH_URL ?? `https://${env.VERCEL_URL}`,
+  trustedOrigins: ['https://*-do0dlemans-projects.vercel.app'],
   plugins: [tanstackStartCookies()],
 })
