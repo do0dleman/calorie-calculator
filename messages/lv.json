@@ -48,10 +48,12 @@
   "overview_protein": "Olbaltumvielas",
   "overview_fat": "Tauki",
   "overview_carbs": "Ogļhidrāti",
-  "overview_meals_count": "Šodien reģistrētās ēdienreizes: {count}",
   "overview_empty": "Šodien vēl nav reģistrētu ēdienreižu",
   "overview_meals_title": "Šodienas ēdienreizes",
   "overview_eaten": "Apēsts",
   "overview_remaining": "Atlicis",
-  "overview_goal_note": "Mērķi pagaidām ir fiksēti: ES standarta uzņemamās devas pieaugušajam."
+  "overview_goal_note": "Mērķi pagaidām ir fiksēti: ES standarta uzņemamās devas pieaugušajam.",
+  "overview_of_goal": "no {goal} {unit} mērķa",
+  "overview_left": "Atlikuši {amount} {unit}",
+  "overview_over": "{amount} {unit} virs mērķa"
 }

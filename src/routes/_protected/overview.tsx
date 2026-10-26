@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '#/components/ui/card'
+import { Card } from '#/components/ui/card'
 import {
   ChartContainer,
   ChartTooltip,
@@ -76,7 +70,7 @@ const NUTRIENTS = [
 
 type NutrientInfo = (typeof NUTRIENTS)[number]
 
-const MACROS = NUTRIENTS.filter((nutrient) => nutrient.key !== 'calories')
+const [CALORIES, ...MACROS] = NUTRIENTS
 
 function todayRange(): DayRange {
   const start = new Date()
@@ -94,17 +88,20 @@ function OverviewPage() {
 
   return (
     <OverviewLayout date={range.from}>
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        {NUTRIENTS.map((nutrient) => (
-          <GoalRing
-            key={nutrient.key}
-            nutrient={nutrient}
-            eaten={totals[nutrient.key]}
-            goal={DAILY_GOALS[nutrient.key]}
-          />
-        ))}
-      </div>
-      <p className="mt-2 text-xs text-muted-foreground">
+      <Card className="gap-0 p-4 sm:p-6">
+        <CaloriesSummary eaten={totals.calories} goal={DAILY_GOALS.calories} />
+        <ul className="mt-4 grid gap-3 border-t border-border pt-4 md:grid-cols-3 md:gap-4">
+          {MACROS.map((macro) => (
+            <MacroRow
+              key={macro.key}
+              nutrient={macro}
+              eaten={totals[macro.key]}
+              goal={DAILY_GOALS[macro.key]}
+            />
+          ))}
+        </ul>
+      </Card>
+      <p className="mt-2 px-1 text-xs text-muted-foreground">
         {m.overview_goal_note()}
       </p>
       <MealList meals={meals} />
@@ -112,7 +109,49 @@ function OverviewPage() {
   )
 }
 
-function GoalRing({
+function CaloriesSummary({ eaten, goal }: { eaten: number; goal: number }) {
+  const left = goal - eaten
+
+  return (
+    <div className="flex items-center gap-3 min-[360px]:gap-4 sm:gap-6">
+      <GoalRing
+        nutrient={CALORIES}
+        eaten={eaten}
+        goal={goal}
+        className="size-24 min-[360px]:size-28 sm:size-32"
+        showPercent
+      />
+      <div className="min-w-0">
+        <p className="text-sm text-muted-foreground">{CALORIES.label()}</p>
+        <p className="mt-0.5 leading-tight">
+          <span className="text-2xl font-semibold tabular-nums min-[360px]:text-3xl">
+            {formatAmount(eaten)}
+          </span>{' '}
+          <span className="text-sm text-muted-foreground">{CALORIES.unit}</span>
+        </p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {m.overview_of_goal({
+            goal: formatAmount(goal),
+            unit: CALORIES.unit,
+          })}
+        </p>
+        <p className="mt-0.5 text-sm font-medium">
+          {left >= 0
+            ? m.overview_left({
+                amount: formatAmount(left),
+                unit: CALORIES.unit,
+              })
+            : m.overview_over({
+                amount: formatAmount(-left),
+                unit: CALORIES.unit,
+              })}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function MacroRow({
   nutrient,
   eaten,
   goal,
@@ -121,16 +160,49 @@ function GoalRing({
   eaten: number
   goal: number
 }) {
-  const percent = percentOf(eaten, goal)
+  return (
+    <li className="flex items-center gap-3">
+      <GoalRing
+        nutrient={nutrient}
+        eaten={eaten}
+        goal={goal}
+        className="size-10 shrink-0"
+      />
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium">{nutrient.label()}</p>
+        <p className="text-xs text-muted-foreground tabular-nums">
+          {formatAmount(eaten)} / {formatAmount(goal)} {nutrient.unit}
+        </p>
+      </div>
+      <p className="shrink-0 text-sm font-semibold tabular-nums">
+        {percentOf(eaten, goal)}%
+      </p>
+    </li>
+  )
+}
+
+function GoalRing({
+  nutrient,
+  eaten,
+  goal,
+  className,
+  showPercent = false,
+}: {
+  nutrient: NutrientInfo
+  eaten: number
+  goal: number
+  className: string
+  showPercent?: boolean
+}) {
   const config = {
     eaten: { label: m.overview_eaten(), theme: nutrient.color },
     // Track uses a faint step of the same hue, so the ring reads as progress toward the goal.
     remaining: {
       label: m.overview_remaining(),
-      color: 'color-mix(in oklab, var(--color-eaten) 18%, transparent)',
+      color: 'color-mix(in oklab, var(--color-eaten) 24%, transparent)',
     },
   } satisfies ChartConfig
-  // Past the goal the ring is simply full; the label still shows the real percentage.
+  // Past the goal the ring is simply full; the text next to it shows the real numbers.
   const data = [
     { part: 'eaten', value: Math.min(eaten, goal), amount: eaten },
     {
@@ -141,78 +213,59 @@ function GoalRing({
   ].map((slice) => ({ ...slice, fill: `var(--color-${slice.part})` }))
 
   return (
-    <Card className="gap-2 py-4">
-      <CardHeader className="px-4">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
-          {nutrient.label()}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="px-4">
-        <ChartContainer
-          config={config}
-          className="mx-auto aspect-square max-h-40"
-        >
-          <PieChart accessibilityLayer>
-            <ChartTooltip
-              cursor={false}
-              content={
-                <ChartTooltipContent
-                  hideLabel
-                  nameKey="part"
-                  formatter={(_value, _name, item) => (
-                    <TooltipRow
-                      color={item.payload.fill}
-                      label={
-                        config[item.payload.part as keyof typeof config].label
-                      }
-                      value={`${formatAmount(item.payload.amount)} ${nutrient.unit}`}
-                    />
-                  )}
-                />
-              }
-            />
-            <Pie
-              data={data}
-              dataKey="value"
+    <ChartContainer config={config} className={`aspect-square ${className}`}>
+      <PieChart accessibilityLayer>
+        <ChartTooltip
+          cursor={false}
+          content={
+            <ChartTooltipContent
+              hideLabel
               nameKey="part"
-              innerRadius="68%"
-              outerRadius="100%"
-              startAngle={90}
-              endAngle={-270}
-              cornerRadius={4}
-              stroke="var(--card)"
-              strokeWidth={2}
-            >
-              <Label
-                content={({ viewBox }) => {
-                  if (!viewBox || !('cx' in viewBox) || !('cy' in viewBox)) {
-                    return null
-                  }
-                  return (
-                    <text
-                      x={viewBox.cx}
-                      y={viewBox.cy}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      className="fill-foreground text-2xl font-semibold"
-                    >
-                      {percent}%
-                    </text>
-                  )
-                }}
-              />
-            </Pie>
-          </PieChart>
-        </ChartContainer>
-        <p className="mt-2 text-center text-sm">
-          <span className="font-semibold">{formatAmount(eaten)}</span>
-          <span className="text-muted-foreground">
-            {' / '}
-            {formatAmount(goal)} {nutrient.unit}
-          </span>
-        </p>
-      </CardContent>
-    </Card>
+              formatter={(_value, _name, item) => (
+                <TooltipRow
+                  color={item.payload.fill}
+                  label={config[item.payload.part as keyof typeof config].label}
+                  value={`${formatAmount(item.payload.amount)} ${nutrient.unit}`}
+                />
+              )}
+            />
+          }
+        />
+        <Pie
+          data={data}
+          dataKey="value"
+          nameKey="part"
+          innerRadius="70%"
+          outerRadius="100%"
+          startAngle={90}
+          endAngle={-270}
+          cornerRadius={4}
+          stroke="var(--card)"
+          strokeWidth={2}
+        >
+          {showPercent ? (
+            <Label
+              content={({ viewBox }) => {
+                if (!viewBox || !('cx' in viewBox) || !('cy' in viewBox)) {
+                  return null
+                }
+                return (
+                  <text
+                    x={viewBox.cx}
+                    y={viewBox.cy}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    className="fill-foreground text-xl font-semibold"
+                  >
+                    {percentOf(eaten, goal)}%
+                  </text>
+                )
+              }}
+            />
+          ) : null}
+        </Pie>
+      </PieChart>
+    </ChartContainer>
   )
 }
 
@@ -224,51 +277,49 @@ function MealList({ meals }: { meals: Array<DailyMeal> }) {
   })
 
   return (
-    <Card className="mt-4 gap-4">
-      <CardHeader>
-        <CardTitle>{m.overview_meals_title()}</CardTitle>
+    <Card className="mt-6 gap-0 p-4 sm:p-6">
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="font-semibold">{m.overview_meals_title()}</h2>
         {meals.length > 0 ? (
-          <CardDescription>
-            {m.overview_meals_count({ count: meals.length })}
-          </CardDescription>
+          <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground tabular-nums">
+            {meals.length}
+          </span>
         ) : null}
-      </CardHeader>
-      <CardContent>
-        {meals.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{m.overview_empty()}</p>
-        ) : (
-          <ol className="divide-y divide-border">
-            {meals.map((meal) => (
-              <li
-                key={meal.id}
-                className="flex items-start gap-4 py-3 first:pt-0 last:pb-0"
-              >
-                <time
-                  dateTime={meal.createdAt.toISOString()}
-                  className="min-w-16 shrink-0 pt-0.5 text-sm whitespace-nowrap text-muted-foreground tabular-nums"
-                >
-                  {timeFormat.format(meal.createdAt)}
-                </time>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-medium">{meal.name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {MACROS.map(
-                      (macro) =>
-                        `${macro.label()} ${formatAmount(meal[macro.key])} ${macro.unit}`,
-                    ).join(' · ')}
-                  </p>
-                </div>
-                <p className="shrink-0 tabular-nums">
+      </div>
+      {meals.length === 0 ? (
+        <p className="mt-3 text-sm text-muted-foreground">
+          {m.overview_empty()}
+        </p>
+      ) : (
+        <ol className="mt-1 divide-y divide-border">
+          {meals.map((meal) => (
+            <li key={meal.id} className="py-3 last:pb-0">
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="min-w-0 font-medium break-words">{meal.name}</p>
+                <p className="shrink-0 whitespace-nowrap tabular-nums">
                   <span className="font-semibold">
                     {formatAmount(meal.calories)}
                   </span>{' '}
-                  <span className="text-sm text-muted-foreground">kcal</span>
+                  <span className="text-xs text-muted-foreground">kcal</span>
                 </p>
-              </li>
-            ))}
-          </ol>
-        )}
-      </CardContent>
+              </div>
+              <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-muted-foreground tabular-nums">
+                <time
+                  dateTime={meal.createdAt.toISOString()}
+                  className="whitespace-nowrap"
+                >
+                  {timeFormat.format(meal.createdAt)}
+                </time>
+                {MACROS.map((macro) => (
+                  <span key={macro.key} className="whitespace-nowrap">
+                    {macro.label()} {formatAmount(meal[macro.key])} {macro.unit}
+                  </span>
+                ))}
+              </div>
+            </li>
+          ))}
+        </ol>
+      )}
     </Card>
   )
 }
@@ -299,12 +350,8 @@ function TooltipRow({
 function OverviewSkeleton() {
   return (
     <OverviewLayout date={todayRange().from}>
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        {NUTRIENTS.map((nutrient) => (
-          <Skeleton key={nutrient.key} className="h-60 rounded-xl" />
-        ))}
-      </div>
-      <Skeleton className="mt-8 h-64 rounded-xl" />
+      <Skeleton className="h-64 rounded-xl md:h-52" />
+      <Skeleton className="mt-8 h-48 rounded-xl" />
     </OverviewLayout>
   )
 }
@@ -317,8 +364,9 @@ function OverviewLayout({
   children: React.ReactNode
 }) {
   return (
-    <main className="container mx-auto mt-2 px-1">
-      <h1 className="text-lg">{m.overview_title()}</h1>
+    // Bottom padding keeps the last card clear of the phone navigation bar.
+    <main className="mx-auto w-full max-w-3xl px-4 pt-4 pb-24 sm:px-6 sm:pt-6 sm:pb-10">
+      <h1 className="text-xl font-semibold">{m.overview_title()}</h1>
       <p className="mb-4 text-sm text-muted-foreground">
         {new Intl.DateTimeFormat(getLocale(), { dateStyle: 'full' }).format(
           new Date(date),
