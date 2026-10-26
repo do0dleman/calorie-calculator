@@ -1,5 +1,6 @@
+import { Button } from '#/components/ui/button'
 import { m } from '#/paraglide/messages'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import {
   CameraIcon,
   ChartPieIcon,
@@ -61,6 +62,14 @@ function App() {
         <p className="max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
           {m.landing_subheading()}
         </p>
+        <div className="flex flex-wrap gap-3 pt-2">
+          <Button asChild size="lg">
+            <Link to="/signup">{m.landing_cta_signup()}</Link>
+          </Button>
+          <Button asChild size="lg" variant="outline">
+            <Link to="/login">{m.landing_cta_login()}</Link>
+          </Button>
+        </div>
       </section>
 
       <Section heading={m.features_heading()}>
