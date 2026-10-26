@@ -1,3 +1,6 @@
+import { Button } from '#/components/ui/button'
+import { m } from '#/paraglide/messages'
+import { MoonIcon, SunIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 type ThemeMode = 'light' | 'dark' | 'auto'
@@ -70,22 +73,25 @@ export function useThemeMode() {
 }
 
 export default function ThemeToggle() {
-  const { mode, toggleMode } = useThemeMode()
+  const { selectMode } = useThemeMode()
 
-  const label =
-    mode === 'auto'
-      ? 'Theme mode: auto (system). Click to switch to light mode.'
-      : `Theme mode: ${mode}. Click to switch mode.`
+  // The icon follows the .dark class via CSS, so server and client render the same markup
+  function toggleTheme() {
+    const isDark = document.documentElement.classList.contains('dark')
+    selectMode(isDark ? 'light' : 'dark')
+  }
 
   return (
-    <button
+    <Button
       type="button"
-      onClick={toggleMode}
-      aria-label={label}
-      title={label}
-      className="rounded-full border border-border bg-muted px-3 py-1.5 text-sm font-semibold text-foreground shadow-sm transition hover:-translate-y-0.5"
+      variant="outline"
+      size="icon"
+      onClick={toggleTheme}
+      aria-label={m.theme_toggle()}
+      title={m.theme_toggle()}
     >
-      {mode === 'auto' ? 'Auto' : mode === 'dark' ? 'Dark' : 'Light'}
-    </button>
+      <MoonIcon className="dark:hidden" aria-hidden />
+      <SunIcon className="hidden dark:block" aria-hidden />
+    </Button>
   )
 }

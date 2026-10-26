@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
-import Header from '../components/header'
+import Footer from '../components/footer'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
@@ -62,9 +62,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="font-sans antialiased">
-        <Header />
+      <body className="relative bg-background font-sans text-foreground antialiased">
         {children}
+        <Footer />
         <TanStackDevtools
           config={{
             position: 'bottom-right',
