@@ -1,4 +1,5 @@
 import { Button } from '#/components/ui/button'
+import { getSession } from '#/lib/auth.functions'
 import { m } from '#/paraglide/messages'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import {
@@ -10,6 +11,10 @@ import {
 import type { ReactNode } from 'react'
 
 export const Route = createFileRoute('/')({
+  loader: async () => {
+    const session = await getSession()
+    return { signedIn: Boolean(session) }
+  },
   head: () => ({
     meta: [{ title: m.landing_title() }],
   }),
@@ -74,6 +79,8 @@ const techGroups = [
 ] as const
 
 function App() {
+  const { signedIn } = Route.useLoaderData()
+
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 pt-20 pb-16 sm:px-6 lg:gap-14 lg:pt-20">
       <section className="flex flex-col items-start gap-6 lg:pb-4">
@@ -84,12 +91,20 @@ function App() {
           {m.landing_subheading()}
         </p>
         <div className="flex flex-wrap gap-3 pt-2">
-          <Button asChild size="lg">
-            <Link to="/signup">{m.landing_cta_signup()}</Link>
-          </Button>
-          <Button asChild size="lg" variant="outline">
-            <Link to="/login">{m.landing_cta_login()}</Link>
-          </Button>
+          {signedIn ? (
+            <Button asChild size="lg">
+              <Link to="/overview">{m.landing_cta_overview()}</Link>
+            </Button>
+          ) : (
+            <>
+              <Button asChild size="lg">
+                <Link to="/signup">{m.landing_cta_signup()}</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link to="/login">{m.landing_cta_login()}</Link>
+              </Button>
+            </>
+          )}
         </div>
       </section>
 
