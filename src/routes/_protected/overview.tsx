@@ -14,33 +14,26 @@ import type { ChartConfig } from '#/components/ui/chart'
 import { Skeleton } from '#/components/ui/skeleton'
 import { DAILY_GOALS } from '#/lib/daily-goals'
 import type { Nutrient } from '#/lib/daily-goals'
-import { dailyTotalsQueryOptions } from '#/lib/meals.functions'
-import type { DayRange } from '#/lib/meals.functions'
+import {
+  dailyMealsQueryOptions,
+  dailyTotalsQueryOptions,
+} from '#/lib/meals.functions'
+import type { DayRange, getDailyMeals } from '#/lib/meals.functions'
 import { m } from '#/paraglide/messages'
 import { getLocale } from '#/paraglide/runtime'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Label,
-  LabelList,
-  Pie,
-  PieChart,
-  Rectangle,
-  ReferenceLine,
-  XAxis,
-  YAxis,
-} from 'recharts'
-import type { BarShapeProps } from 'recharts'
+import { Label, Pie, PieChart } from 'recharts'
 
 export const Route = createFileRoute('/_protected/overview')({
   // Run the loader in the browser so "today" uses the user's local timezone.
   ssr: false,
   loader: async ({ context }) => {
     const range = todayRange()
-    await context.queryClient.ensureQueryData(dailyTotalsQueryOptions(range))
+    await Promise.all([
+      context.queryClient.ensureQueryData(dailyTotalsQueryOptions(range)),
+      context.queryClient.ensureQueryData(dailyMealsQueryOptions(range)),
+    ])
     return { range }
   },
   pendingComponent: OverviewSkeleton,
@@ -83,6 +76,8 @@ const NUTRIENTS = [
 
 type NutrientInfo = (typeof NUTRIENTS)[number]
 
+const MACROS = NUTRIENTS.filter((nutrient) => nutrient.key !== 'calories')
+
 function todayRange(): DayRange {
   const start = new Date()
   start.setHours(0, 0, 0, 0)
@@ -95,6 +90,7 @@ function todayRange(): DayRange {
 function OverviewPage() {
   const { range } = Route.useLoaderData()
   const { data: totals } = useSuspenseQuery(dailyTotalsQueryOptions(range))
+  const { data: meals } = useSuspenseQuery(dailyMealsQueryOptions(range))
 
   return (
     <OverviewLayout date={range.from}>
@@ -108,12 +104,10 @@ function OverviewPage() {
           />
         ))}
       </div>
-      <GoalBarChart totals={totals} />
-      <p className="mt-4 text-sm text-muted-foreground">
-        {totals.mealCount === 0
-          ? m.overview_empty()
-          : m.overview_meals_count({ count: totals.mealCount })}
+      <p className="mt-2 text-xs text-muted-foreground">
+        {m.overview_goal_note()}
       </p>
+      <MealList meals={meals} />
     </OverviewLayout>
   )
 }
@@ -222,117 +216,58 @@ function GoalRing({
   )
 }
 
-type BarRow = {
-  key: Nutrient
-  label: string
-  unit: string
-  eaten: number
-  goal: number
-  percent: number
-}
+type DailyMeal = Awaited<ReturnType<typeof getDailyMeals>>[number]
 
-function GoalBarChart({ totals }: { totals: Record<Nutrient, number> }) {
-  const config = Object.fromEntries(
-    NUTRIENTS.map((nutrient) => [
-      nutrient.key,
-      { label: nutrient.label(), theme: nutrient.color },
-    ]),
-  ) satisfies ChartConfig
-  const data: Array<BarRow> = NUTRIENTS.map((nutrient) => ({
-    key: nutrient.key,
-    label: nutrient.label(),
-    unit: nutrient.unit,
-    eaten: totals[nutrient.key],
-    goal: DAILY_GOALS[nutrient.key],
-    percent: percentOf(totals[nutrient.key], DAILY_GOALS[nutrient.key]),
-  }))
-  // Keep the 100% goal line in view, and leave room when something goes past it.
-  const maxPercent = Math.max(
-    100,
-    Math.ceil(Math.max(...data.map((row) => row.percent)) / 25) * 25,
-  )
-  const tickStep = maxPercent > 150 ? 50 : 25
-  const ticks = Array.from(
-    { length: Math.floor(maxPercent / tickStep) + 1 },
-    (_, index) => index * tickStep,
-  )
+function MealList({ meals }: { meals: Array<DailyMeal> }) {
+  const timeFormat = new Intl.DateTimeFormat(getLocale(), {
+    timeStyle: 'short',
+  })
 
   return (
     <Card className="mt-4 gap-4">
       <CardHeader>
-        <CardTitle>{m.overview_goal_chart_title()}</CardTitle>
-        <CardDescription>{m.overview_goal_note()}</CardDescription>
+        <CardTitle>{m.overview_meals_title()}</CardTitle>
+        {meals.length > 0 ? (
+          <CardDescription>
+            {m.overview_meals_count({ count: meals.length })}
+          </CardDescription>
+        ) : null}
       </CardHeader>
       <CardContent>
-        <ChartContainer config={config} className="aspect-auto h-56 w-full">
-          <BarChart
-            accessibilityLayer
-            data={data}
-            layout="vertical"
-            margin={{ top: 16, right: 48, left: 8 }}
-          >
-            <CartesianGrid horizontal={false} />
-            <XAxis
-              type="number"
-              domain={[0, maxPercent]}
-              ticks={ticks}
-              tickFormatter={(value: number) => `${value}%`}
-              tickLine={false}
-              axisLine={false}
-            />
-            <YAxis
-              type="category"
-              dataKey="label"
-              width={110}
-              tickLine={false}
-              axisLine={false}
-            />
-            <ChartTooltip
-              cursor={{ fill: 'var(--muted)', opacity: 0.5 }}
-              content={
-                <ChartTooltipContent
-                  hideLabel
-                  formatter={(_value, _name, item) => (
-                    <TooltipRow
-                      color={`var(--color-${item.payload.key})`}
-                      label={item.payload.label}
-                      value={`${formatAmount(item.payload.eaten)} / ${formatAmount(item.payload.goal)} ${item.payload.unit}`}
-                    />
-                  )}
-                />
-              }
-            />
-            <ReferenceLine
-              x={100}
-              stroke="var(--muted-foreground)"
-              strokeDasharray="4 4"
-            >
-              <Label
-                value="100%"
-                position="top"
-                className="fill-muted-foreground text-xs"
-              />
-            </ReferenceLine>
-            <Bar
-              dataKey="percent"
-              radius={[0, 4, 4, 0]}
-              barSize={20}
-              shape={(props: BarShapeProps) => (
-                <Rectangle
-                  {...props}
-                  fill={`var(--color-${(props.payload as BarRow).key})`}
-                />
-              )}
-            >
-              <LabelList
-                dataKey="percent"
-                position="right"
-                formatter={(value) => `${value}%`}
-                className="fill-foreground text-xs"
-              />
-            </Bar>
-          </BarChart>
-        </ChartContainer>
+        {meals.length === 0 ? (
+          <p className="text-sm text-muted-foreground">{m.overview_empty()}</p>
+        ) : (
+          <ol className="divide-y divide-border">
+            {meals.map((meal) => (
+              <li
+                key={meal.id}
+                className="flex items-start gap-4 py-3 first:pt-0 last:pb-0"
+              >
+                <time
+                  dateTime={meal.createdAt.toISOString()}
+                  className="min-w-16 shrink-0 pt-0.5 text-sm whitespace-nowrap text-muted-foreground tabular-nums"
+                >
+                  {timeFormat.format(meal.createdAt)}
+                </time>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-medium">{meal.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {MACROS.map(
+                      (macro) =>
+                        `${macro.label()} ${formatAmount(meal[macro.key])} ${macro.unit}`,
+                    ).join(' · ')}
+                  </p>
+                </div>
+                <p className="shrink-0 tabular-nums">
+                  <span className="font-semibold">
+                    {formatAmount(meal.calories)}
+                  </span>{' '}
+                  <span className="text-sm text-muted-foreground">kcal</span>
+                </p>
+              </li>
+            ))}
+          </ol>
+        )}
       </CardContent>
     </Card>
   )
@@ -369,7 +304,7 @@ function OverviewSkeleton() {
           <Skeleton key={nutrient.key} className="h-60 rounded-xl" />
         ))}
       </div>
-      <Skeleton className="mt-4 h-80 rounded-xl" />
+      <Skeleton className="mt-8 h-64 rounded-xl" />
     </OverviewLayout>
   )
 }

@@ -50,8 +50,8 @@
   "overview_carbs": "Ogļhidrāti",
   "overview_meals_count": "Šodien reģistrētās ēdienreizes: {count}",
   "overview_empty": "Šodien vēl nav reģistrētu ēdienreižu",
+  "overview_meals_title": "Šodienas ēdienreizes",
   "overview_eaten": "Apēsts",
   "overview_remaining": "Atlicis",
-  "overview_goal_chart_title": "Daļa no dienas mērķa",
   "overview_goal_note": "Mērķi pagaidām ir fiksēti: ES standarta uzņemamās devas pieaugušajam."
 }
