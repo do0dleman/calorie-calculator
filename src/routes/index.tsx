@@ -1,7 +1,5 @@
-import { Button } from '#/components/ui/button'
-import { getSession } from '#/lib/auth.functions'
 import { m } from '#/paraglide/messages'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import {
   CameraIcon,
   ChartPieIcon,
@@ -11,10 +9,6 @@ import {
 import type { ReactNode } from 'react'
 
 export const Route = createFileRoute('/')({
-  loader: async () => {
-    const session = await getSession()
-    return { signedIn: Boolean(session) }
-  },
   head: () => ({
     meta: [{ title: m.landing_title() }],
   }),
@@ -58,8 +52,6 @@ const techStack = [
 ] as const
 
 function App() {
-  const { signedIn } = Route.useLoaderData()
-
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-col gap-20 px-4 pt-12 pb-24 sm:px-6 lg:gap-24 lg:pt-20">
       <section className="flex flex-col items-start gap-6 lg:py-8">
@@ -69,22 +61,6 @@ function App() {
         <p className="max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
           {m.landing_subheading()}
         </p>
-        <div className="flex flex-wrap gap-3 pt-2">
-          {signedIn ? (
-            <Button asChild size="lg">
-              <Link to="/overview">{m.landing_cta_overview()}</Link>
-            </Button>
-          ) : (
-            <>
-              <Button asChild size="lg">
-                <Link to="/signup">{m.landing_cta_signup()}</Link>
-              </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link to="/login">{m.landing_cta_login()}</Link>
-              </Button>
-            </>
-          )}
-        </div>
       </section>
 
       <Section heading={m.features_heading()}>
