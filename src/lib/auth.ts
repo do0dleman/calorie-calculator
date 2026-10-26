@@ -11,6 +11,6 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  baseURL: env.BETTER_AUTH_URL ?? env.VERCEL_URL,
+  baseURL: env.BETTER_AUTH_URL ?? `https://${env.VERCEL_URL}`,
   plugins: [tanstackStartCookies()],
 })
