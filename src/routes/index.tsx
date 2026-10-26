@@ -1,3 +1,4 @@
+import Footer from '#/components/footer'
 import LanguageToggle from '#/components/language_toggle'
 import ThemeToggle from '#/components/theme_toggle'
 import { Button } from '#/components/ui/button'
@@ -161,6 +162,7 @@ function App() {
           </div>
         </section>
       </main>
+      <Footer />
     </>
   )
 }

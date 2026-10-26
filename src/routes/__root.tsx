@@ -5,7 +5,6 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
-import Footer from '../components/footer'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
@@ -64,7 +63,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body className="relative bg-background font-sans text-foreground antialiased has-[[data-bottom-nav]]:pb-14 sm:has-[[data-bottom-nav]]:pb-0">
         {children}
-        <Footer />
         <TanStackDevtools
           config={{
             position: 'bottom-right',
