@@ -5,7 +5,7 @@ export const mealSourceEnum = pgEnum('meal_source', ['manual', 'picture'])
 
 export const meal = pgTable('meal', {
   id: text('id').primaryKey(),
-  userId: text('id')
+  userId: text('user_id')
     .references(() => user.id, { onDelete: 'cascade' })
     .notNull(),
   name: text('name').notNull(),

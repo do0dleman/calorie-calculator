@@ -15,6 +15,13 @@
       "when": 1793005806480,
       "tag": "0001_normal_vermin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793006295800,
+      "tag": "0002_deep_molly_hayes",
+      "breakpoints": true
     }
   ]
 }
