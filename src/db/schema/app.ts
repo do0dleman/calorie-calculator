@@ -8,6 +8,7 @@ export const meal = pgTable('meal', {
   userId: text('id')
     .references(() => user.id, { onDelete: 'cascade' })
     .notNull(),
+  name: text('name').notNull(),
   calories_kcal: numeric('calories_kcal', {
     precision: 10,
     scale: 2,
