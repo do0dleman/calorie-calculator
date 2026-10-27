@@ -6,6 +6,7 @@ import { mealHistoryQueryOptions } from '#/modules/history/history.functions'
 import { dayKey, groupMealsByDay } from '#/modules/history/utils'
 import type { MealDay } from '#/modules/history/utils'
 import { MealTable } from '#/modules/overview/components/meal_table'
+import { MealTimeline } from '#/modules/overview/components/meal_timeline'
 import {
   formatAmount,
   formatDate,
@@ -13,8 +14,6 @@ import {
   formatWeekday,
 } from '#/modules/overview/utils'
 import { m } from '#/paraglide/messages'
-
-import { MealTimeline } from './meal_timeline'
 
 export function History() {
   const { data: meals } = useSuspenseQuery(mealHistoryQueryOptions())

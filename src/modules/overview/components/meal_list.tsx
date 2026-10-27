@@ -3,6 +3,7 @@ import type { DailyMeal } from '#/modules/overview/types'
 import { m } from '#/paraglide/messages'
 
 import { MealTable } from './meal_table'
+import { MealTimeline } from './meal_timeline'
 
 export function MealList({ meals }: { meals: Array<DailyMeal> }) {
   return (
@@ -20,7 +21,15 @@ export function MealList({ meals }: { meals: Array<DailyMeal> }) {
           {m.overview_empty()}
         </p>
       ) : (
-        <MealTable meals={meals} />
+        <>
+          {/* Phones get a timeline; wider screens keep the aligned table. */}
+          <div className="md:hidden">
+            <MealTimeline meals={meals} />
+          </div>
+          <div className="hidden md:block">
+            <MealTable meals={meals} />
+          </div>
+        </>
       )}
     </Card>
   )

@@ -1,25 +1,14 @@
 import { MACROS } from '#/modules/overview/nutrients'
 import type { DailyMeal } from '#/modules/overview/types'
 import { formatAmount } from '#/modules/overview/utils'
-import { m } from '#/paraglide/messages'
 import { getLocale } from '#/paraglide/runtime'
 
-const SHORT_LABELS = {
-  protein: m.overview_protein_short,
-  fat: m.overview_fat_short,
-  carbs: m.overview_carbs_short,
-} as const
+const MACRO_COLUMNS = ['col-start-3', 'col-start-4', 'col-start-5'] as const
 
-// Phones: name + time on the first line; protein, fat, carbs and kcal as four
-// columns on the second. md and up: one line per meal. Rows share the parent's
-// columns (subgrid), so the numbers line up from meal to meal like a table.
-const MACRO_COLUMNS = [
-  'col-start-1 md:col-start-3',
-  'col-start-2 md:col-start-4',
-  'col-start-3 md:col-start-5',
-] as const
-
-// Meals of one day as a simple table. Shared by Overview and History.
+// Wide-screen layout of a day's meals: one line per meal. Rows share the
+// parent's columns (subgrid), so the numbers line up like a table. Fixed column
+// widths keep separate cards aligned with each other. Shared by Overview and
+// History; phones use MealTimeline instead.
 export function MealTable({ meals }: { meals: Array<DailyMeal> }) {
   const timeFormat = new Intl.DateTimeFormat(getLocale(), {
     timeStyle: 'short',
@@ -28,7 +17,7 @@ export function MealTable({ meals }: { meals: Array<DailyMeal> }) {
   return (
     <div
       role="table"
-      className="mt-2 grid grid-cols-[repeat(4,minmax(0,1fr))] gap-x-2 text-sm md:grid-cols-[4.5rem_minmax(0,1fr)_repeat(3,5.5rem)_4.5rem] md:gap-x-4"
+      className="mt-2 grid grid-cols-[4.5rem_minmax(0,1fr)_repeat(3,5.5rem)_4.5rem] gap-x-4 text-sm"
     >
       <div
         role="row"
@@ -38,16 +27,12 @@ export function MealTable({ meals }: { meals: Array<DailyMeal> }) {
           <span
             key={macro.key}
             role="columnheader"
-            className={`${MACRO_COLUMNS[index]} row-start-1 text-right`}
+            className={`${MACRO_COLUMNS[index]} text-right`}
           >
-            <span className="md:hidden">{SHORT_LABELS[macro.key]()}</span>
-            <span className="hidden md:inline">{macro.label()}</span>
+            {macro.label()}
           </span>
         ))}
-        <span
-          role="columnheader"
-          className="col-start-4 row-start-1 text-right md:col-start-6"
-        >
+        <span role="columnheader" className="col-start-6 text-right">
           kcal
         </span>
       </div>
@@ -56,37 +41,34 @@ export function MealTable({ meals }: { meals: Array<DailyMeal> }) {
         <div
           key={meal.id}
           role="row"
-          className="col-span-full grid grid-cols-subgrid items-baseline gap-y-0.5 border-t border-border py-2.5 tabular-nums last:pb-0"
+          className="col-span-full grid grid-cols-subgrid items-baseline border-t border-border py-2.5 tabular-nums last:pb-0"
         >
-          <span
-            role="cell"
-            className="col-span-3 row-start-1 min-w-0 font-medium break-words md:col-span-1 md:col-start-2"
-          >
-            {meal.name}
-          </span>
-          <span
-            role="cell"
-            className="col-start-4 row-start-2 text-right font-semibold whitespace-nowrap md:col-start-6 md:row-start-1"
-          >
-            {formatAmount(meal.calories)}
-          </span>
           <time
             role="cell"
             dateTime={meal.createdAt.toISOString()}
-            className="col-start-4 row-start-1 text-right text-xs whitespace-nowrap text-muted-foreground md:col-start-1 md:text-left"
+            className="text-xs whitespace-nowrap text-muted-foreground"
           >
             {timeFormat.format(meal.createdAt)}
           </time>
-          {MACROS.map((macro, index) => (
+          <span role="cell" className="min-w-0 font-medium break-words">
+            {meal.name}
+          </span>
+          {MACROS.map((macro) => (
             <span
               key={macro.key}
               role="cell"
-              className={`${MACRO_COLUMNS[index]} row-start-2 text-right whitespace-nowrap md:row-start-1`}
+              className="text-right whitespace-nowrap"
             >
               {formatAmount(meal[macro.key])}
               <span className="text-xs text-muted-foreground"> g</span>
             </span>
           ))}
+          <span
+            role="cell"
+            className="text-right font-semibold whitespace-nowrap"
+          >
+            {formatAmount(meal.calories)}
+          </span>
         </div>
       ))}
     </div>

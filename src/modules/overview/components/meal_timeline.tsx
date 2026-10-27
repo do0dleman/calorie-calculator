@@ -11,14 +11,15 @@ const SHORT_LABELS = {
   carbs: m.overview_carbs_short,
 } as const
 
-// Phone layout of a day: macro totals (also the color key), then the meals
-// as a timeline.
+// Phone layout of a day's meals as a timeline. Shared by Overview and History.
+// With `totals`, a macro summary (also the color key) comes first; Overview
+// leaves it out because its summary card already shows the day's macros.
 export function MealTimeline({
   meals,
   totals,
 }: {
   meals: Array<DailyMeal>
-  totals: Record<Nutrient, number>
+  totals?: Record<Nutrient, number>
 }) {
   const timeFormat = new Intl.DateTimeFormat(getLocale(), {
     timeStyle: 'short',
@@ -26,19 +27,21 @@ export function MealTimeline({
 
   return (
     <>
-      <dl className="mt-3 grid grid-cols-3 gap-2 rounded-lg bg-muted/60 px-3 py-2">
-        {MACROS.map((macro) => (
-          <div key={macro.key}>
-            <dt className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Dot nutrient={macro} />
-              {SHORT_LABELS[macro.key]()}
-            </dt>
-            <dd className="mt-0.5 pl-3.5 text-sm font-semibold tabular-nums">
-              {formatAmount(totals[macro.key])} g
-            </dd>
-          </div>
-        ))}
-      </dl>
+      {totals ? (
+        <dl className="mt-3 grid grid-cols-3 gap-2 rounded-lg bg-muted/60 px-3 py-2">
+          {MACROS.map((macro) => (
+            <div key={macro.key}>
+              <dt className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Dot nutrient={macro} />
+                {SHORT_LABELS[macro.key]()}
+              </dt>
+              <dd className="mt-0.5 pl-3.5 text-sm font-semibold tabular-nums">
+                {formatAmount(totals[macro.key])} g
+              </dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
 
       <ol className="mt-4">
         {meals.map((meal) => (
