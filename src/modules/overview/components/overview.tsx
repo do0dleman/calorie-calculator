@@ -3,7 +3,7 @@ import { getRouteApi } from '@tanstack/react-router'
 
 import { Card } from '#/components/ui/card'
 import { Skeleton } from '#/components/ui/skeleton'
-import { DAILY_GOALS } from '#/modules/overview/daily_goals'
+import { useDailyGoals } from '#/modules/overview/daily_goals'
 import { MACROS } from '#/modules/overview/nutrients'
 import {
   dailyMealsQueryOptions,
@@ -20,20 +20,21 @@ const route = getRouteApi('/_protected/overview')
 
 export function Overview() {
   const { range } = route.useLoaderData()
+  const { goals } = useDailyGoals()
   const { data: totals } = useSuspenseQuery(dailyTotalsQueryOptions(range))
   const { data: meals } = useSuspenseQuery(dailyMealsQueryOptions(range))
 
   return (
     <OverviewLayout date={range.from}>
       <Card className="gap-0 p-4 sm:p-6">
-        <CaloriesSummary eaten={totals.calories} goal={DAILY_GOALS.calories} />
+        <CaloriesSummary eaten={totals.calories} goal={goals.calories} />
         <ul className="mt-4 grid gap-3 border-t border-border pt-4 md:grid-cols-3 md:gap-4">
           {MACROS.map((macro) => (
             <MacroRow
               key={macro.key}
               nutrient={macro}
               eaten={totals[macro.key]}
-              goal={DAILY_GOALS[macro.key]}
+              goal={goals[macro.key]}
             />
           ))}
         </ul>

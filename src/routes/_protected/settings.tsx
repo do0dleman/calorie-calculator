@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_protected/settings')({
-  component: RouteComponent,
-})
+import { Settings } from '#/modules/settings'
 
-function RouteComponent() {
-  return <div>Hello "/_protected/settings"!</div>
-}
+export const Route = createFileRoute('/_protected/settings')({
+  // Goals are read from localStorage on the first render.
+  ssr: false,
+  component: Settings,
+})
