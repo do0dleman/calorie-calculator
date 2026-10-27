@@ -4,7 +4,7 @@ Build for RTU subject "Programmatūras izstrādes tehnoloģija" as a prototype f
 
 # Current deployment
 
-Hosted via Vercel, check the [current deployment](https://calorie-calculator-eadvxhmr8-do0dlemans-projects.vercel.app/).
+Hosted via Vercel, check the [current deployment](https://calorie-calculator-sooty.vercel.app/).
 
 # Local development
 
