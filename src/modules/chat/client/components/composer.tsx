@@ -100,7 +100,7 @@ export function Composer({
           disabled={!canSend}
           aria-label={disabled ? 'Waiting for a reply' : 'Send'}
         >
-          {disabled ? <LoaderCircle className="animate-spin" /> : <Send />}
+          <Send />
         </Button>
       </div>
     </form>
