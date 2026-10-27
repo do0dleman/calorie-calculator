@@ -4,8 +4,10 @@ import { and, eq } from 'drizzle-orm'
 import { z } from 'zod'
 
 import { db } from '#/db'
-import { meal } from '#/db/schema/app'
+import { chatMessage, chatThread, meal } from '#/db/schema/app'
 import { auth } from '#/lib/auth'
+import { storedLoggedMealMessage } from '#/modules/chat/common/stored_parts'
+import type { StoredChatMessage } from '#/modules/chat/common/types'
 
 import { mealFieldsSchema } from './meal.schema'
 import type { LoggedMeal } from './meal.schema'
@@ -24,20 +26,54 @@ export const createManualMeal = createServerFn({ method: 'POST' })
     }
 
     const id = crypto.randomUUID()
+    const logged = { id, ...data } satisfies LoggedMeal
+    const message = storedLoggedMealMessage(logged)
+    const thread = await ensureChatThread(session.user.id)
 
-    await db.insert(meal).values({
-      id,
-      userId: session.user.id,
-      name: data.name,
-      calories_kcal: data.caloriesKcal.toString(),
-      protein_g: data.proteinG.toString(),
-      fat_g: data.fatG.toString(),
-      carbs_g: data.carbsG.toString(),
-      source: 'manual',
+    await db.transaction(async (tx) => {
+      await tx.insert(meal).values({
+        id,
+        userId: session.user.id,
+        name: data.name,
+        calories_kcal: data.caloriesKcal.toString(),
+        protein_g: data.proteinG.toString(),
+        fat_g: data.fatG.toString(),
+        carbs_g: data.carbsG.toString(),
+        source: 'manual',
+      })
+
+      await tx.insert(chatMessage).values({
+        id: message.id,
+        threadId: thread.id,
+        role: message.role,
+        parts: message.parts,
+        createdAt: new Date(message.createdAt),
+      })
     })
 
-    return { id, ...data } satisfies LoggedMeal
+    return { meal: logged, message } satisfies {
+      meal: LoggedMeal
+      message: StoredChatMessage
+    }
   })
+
+async function ensureChatThread(userId: string) {
+  const existing = await db
+    .select()
+    .from(chatThread)
+    .where(eq(chatThread.userId, userId))
+    .limit(1)
+
+  if (existing[0]) return existing[0]
+
+  const created = {
+    id: crypto.randomUUID(),
+    userId,
+  }
+
+  await db.insert(chatThread).values(created)
+  return created
+}
 
 const updateMealSchema = mealFieldsSchema.extend({
   id: z.string().min(1),

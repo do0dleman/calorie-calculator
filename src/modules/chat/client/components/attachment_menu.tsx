@@ -1,10 +1,12 @@
 import { useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
+import type { UIMessage } from '@tanstack/ai-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
 import { Camera, ImageIcon, PenLine, Plus } from 'lucide-react'
 
 import { Button } from '#/components/ui/button'
+import { storedToUIMessage } from '#/modules/chat/common/stored_parts'
 import { createManualMeal } from '#/modules/meal/meal.functions'
 import {
   DropdownMenu,
@@ -15,7 +17,13 @@ import {
 
 import { ManualMealDialog } from './manual_meal_dialog'
 
-export function AttachmentMenu({ onPick }: { onPick: (file: File) => void }) {
+export function AttachmentMenu({
+  onPick,
+  onLoggedMeal,
+}: {
+  onPick: (file: File) => void
+  onLoggedMeal: (message: UIMessage) => void
+}) {
   const cameraRef = useRef<HTMLInputElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const [mealOpen, setMealOpen] = useState(false)
@@ -76,11 +84,13 @@ export function AttachmentMenu({ onPick }: { onPick: (file: File) => void }) {
       <ManualMealDialog
         open={mealOpen}
         onOpenChange={setMealOpen}
-        onSubmit={async (meal) => {
-          await saveMeal({ data: meal })
+        onSubmit={async (fields) => {
+          const { message } = await saveMeal({ data: fields })
+          onLoggedMeal(storedToUIMessage(message))
           await Promise.all([
             queryClient.invalidateQueries({ queryKey: ['daily-meals'] }),
             queryClient.invalidateQueries({ queryKey: ['daily-totals'] }),
+            queryClient.invalidateQueries({ queryKey: ['chat-messages'] }),
           ])
         }}
       />

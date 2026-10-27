@@ -1,5 +1,7 @@
 import type { UIMessage } from '@tanstack/ai'
 
+import type { LoggedMeal } from '#/modules/meal/meal.schema'
+
 import type {
   JsonValue,
   StoredChatMessage,
@@ -94,6 +96,33 @@ export function toStoredParts(
   }
 
   return parts
+}
+
+export function storedLoggedMealMessage(meal: LoggedMeal): StoredChatMessage {
+  const fields = {
+    name: meal.name,
+    caloriesKcal: meal.caloriesKcal,
+    proteinG: meal.proteinG,
+    fatG: meal.fatG,
+    carbsG: meal.carbsG,
+  }
+
+  return {
+    id: crypto.randomUUID(),
+    role: 'assistant',
+    createdAt: new Date().toISOString(),
+    parts: [
+      {
+        type: 'tool-call',
+        id: crypto.randomUUID(),
+        name: 'logMeal',
+        arguments: JSON.stringify(fields),
+        state: 'complete',
+        input: fields,
+        output: meal,
+      },
+    ],
+  }
 }
 
 export function storedToUIMessage(message: StoredChatMessage): UIMessage {

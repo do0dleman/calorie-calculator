@@ -95,6 +95,13 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
 }
 
+function unsignedToolStub(name: string, args: unknown) {
+  if (typeof args === 'string' && args.length > 0) {
+    return `[logged with ${name}: ${args}]`
+  }
+  return `[logged with ${name}]`
+}
+
 export function extractCurrentImage(message: UIMessage): CurrentImage | null {
   for (const part of message.parts) {
     if (part.type !== 'image') continue
@@ -164,7 +171,7 @@ function dropUnsignedToolCalls(
 
     const stubs = unsigned.map((call) => ({
       type: 'text' as const,
-      content: `[logged with ${call.function.name}]`,
+      content: unsignedToolStub(call.function.name, call.function.arguments),
     }))
     const existing =
       typeof message.content === 'string'

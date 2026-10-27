@@ -33,7 +33,7 @@ function MealChatSession({
   const [pending, setPending] = useState<PendingImage | null>(null)
   const urlsRef = useRef<string[]>([])
 
-  const { messages, sendMessage, status, error } = useChat({
+  const { messages, sendMessage, setMessages, status, error } = useChat({
     connection: fetchServerSentEvents('/api/chat'),
     initialMessages,
     onFinish: () => {
@@ -42,6 +42,8 @@ function MealChatSession({
       void queryClient.invalidateQueries({ queryKey: ['chat-messages'] })
     },
   })
+  const messagesRef = useRef(messages)
+  messagesRef.current = messages
 
   useEffect(() => {
     const urls = urlsRef.current
@@ -112,6 +114,9 @@ function MealChatSession({
         onInput={setInput}
         onPick={chooseImage}
         onClearPending={clearPending}
+        onLoggedMeal={(message) => {
+          setMessages([...messagesRef.current, message])
+        }}
         onSend={() => {
           void send()
         }}

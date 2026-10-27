@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import type { UIMessage } from '@tanstack/ai-react'
 import { Send, X } from 'lucide-react'
 
 import { Button } from '#/components/ui/button'
@@ -14,6 +15,7 @@ export function Composer({
   onPick,
   onClearPending,
   onSend,
+  onLoggedMeal,
 }: {
   input: string
   pending: PendingImage | null
@@ -22,6 +24,7 @@ export function Composer({
   onPick: (file: File) => void
   onClearPending: () => void
   onSend: () => void
+  onLoggedMeal: (message: UIMessage) => void
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const canSend = !disabled && (input.trim().length > 0 || pending !== null)
@@ -70,7 +73,7 @@ export function Composer({
       ) : null}
 
       <div className="flex items-end gap-2">
-        <AttachmentMenu onPick={onPick} />
+        <AttachmentMenu onPick={onPick} onLoggedMeal={onLoggedMeal} />
 
         <textarea
           ref={textareaRef}
