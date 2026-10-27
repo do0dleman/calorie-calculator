@@ -9,9 +9,8 @@ import {
   dailyMealsQueryOptions,
   dailyTotalsQueryOptions,
 } from '#/modules/overview/overview.functions'
-import { todayRange } from '#/modules/overview/utils'
+import { formatFullDate, todayRange } from '#/modules/overview/utils'
 import { m } from '#/paraglide/messages'
-import { getLocale } from '#/paraglide/runtime'
 
 import { CaloriesSummary } from './calories_summary'
 import { MacroRow } from './macro_row'
@@ -68,9 +67,7 @@ function OverviewLayout({
     <main className="mx-auto w-full max-w-3xl px-4 pt-4 pb-24 sm:px-6 sm:pt-6 sm:pb-10">
       <h1 className="text-xl font-semibold">{m.overview_title()}</h1>
       <p className="mb-4 text-sm text-muted-foreground">
-        {new Intl.DateTimeFormat(getLocale(), { dateStyle: 'full' }).format(
-          new Date(date),
-        )}
+        {formatFullDate(new Date(date))}
       </p>
       {children}
     </main>
