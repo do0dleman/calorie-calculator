@@ -55,5 +55,9 @@
   "overview_goal_note": "Goals are fixed for now: EU reference intakes for an average adult.",
   "overview_of_goal": "of {goal} {unit} goal",
   "overview_left": "{amount} {unit} left",
-  "overview_over": "{amount} {unit} over goal"
+  "overview_over": "{amount} {unit} over goal",
+  "nav_history": "History",
+  "history_title": "History",
+  "history_today": "Today",
+  "history_empty": "No meals logged yet"
 }

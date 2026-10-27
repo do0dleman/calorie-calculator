@@ -55,5 +55,9 @@
   "overview_goal_note": "Mērķi pagaidām ir fiksēti: ES standarta uzņemamās devas pieaugušajam.",
   "overview_of_goal": "no {goal} {unit} mērķa",
   "overview_left": "Atlikuši {amount} {unit}",
-  "overview_over": "{amount} {unit} virs mērķa"
+  "overview_over": "{amount} {unit} virs mērķa",
+  "nav_history": "Vēsture",
+  "history_title": "Vēsture",
+  "history_today": "Šodien",
+  "history_empty": "Vēl nav reģistrētu ēdienreižu"
 }

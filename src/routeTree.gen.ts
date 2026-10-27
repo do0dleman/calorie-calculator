@@ -14,6 +14,7 @@ import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as authSignupRouteImport } from './routes/(auth)/signup'
 import { Route as ProtectedChatRouteImport } from './routes/_protected/chat'
+import { Route as ProtectedHistoryRouteImport } from './routes/_protected/history'
 import { Route as ProtectedOverviewRouteImport } from './routes/_protected/overview'
 import { Route as ProtectedSettingsRouteImport } from './routes/_protected/settings'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -42,6 +43,11 @@ const ProtectedChatRoute = ProtectedChatRouteImport.update({
   path: '/chat',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedHistoryRoute = ProtectedHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedOverviewRoute = ProtectedOverviewRouteImport.update({
   id: '/overview',
   path: '/overview',
@@ -63,6 +69,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
   '/chat': typeof ProtectedChatRoute
+  '/history': typeof ProtectedHistoryRoute
   '/overview': typeof ProtectedOverviewRoute
   '/settings': typeof ProtectedSettingsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -72,6 +79,7 @@ export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
   '/chat': typeof ProtectedChatRoute
+  '/history': typeof ProtectedHistoryRoute
   '/overview': typeof ProtectedOverviewRoute
   '/settings': typeof ProtectedSettingsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -83,6 +91,7 @@ export interface FileRoutesById {
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
   '/_protected/chat': typeof ProtectedChatRoute
+  '/_protected/history': typeof ProtectedHistoryRoute
   '/_protected/overview': typeof ProtectedOverviewRoute
   '/_protected/settings': typeof ProtectedSettingsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -94,6 +103,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/chat'
+    | '/history'
     | '/overview'
     | '/settings'
     | '/api/auth/$'
@@ -103,6 +113,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/chat'
+    | '/history'
     | '/overview'
     | '/settings'
     | '/api/auth/$'
@@ -113,6 +124,7 @@ export interface FileRouteTypes {
     | '/(auth)/login'
     | '/(auth)/signup'
     | '/_protected/chat'
+    | '/_protected/history'
     | '/_protected/overview'
     | '/_protected/settings'
     | '/api/auth/$'
@@ -163,6 +175,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedChatRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/history': {
+      id: '/_protected/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof ProtectedHistoryRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/overview': {
       id: '/_protected/overview'
       path: '/overview'
@@ -189,12 +208,14 @@ declare module '@tanstack/react-router' {
 
 interface ProtectedRouteChildren {
   ProtectedChatRoute: typeof ProtectedChatRoute
+  ProtectedHistoryRoute: typeof ProtectedHistoryRoute
   ProtectedOverviewRoute: typeof ProtectedOverviewRoute
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedChatRoute: ProtectedChatRoute,
+  ProtectedHistoryRoute: ProtectedHistoryRoute,
   ProtectedOverviewRoute: ProtectedOverviewRoute,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
 }

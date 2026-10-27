@@ -1,10 +1,16 @@
 import { Link } from '@tanstack/react-router'
-import { ChartPieIcon, MessageSquareIcon, SettingsIcon } from 'lucide-react'
+import {
+  ChartPieIcon,
+  HistoryIcon,
+  MessageSquareIcon,
+  SettingsIcon,
+} from 'lucide-react'
 import { m } from '#/paraglide/messages'
 import AvatarMenu from './avatar_menu.tsx'
 
 const navItems = [
   { to: '/overview', label: m.nav_overview, icon: ChartPieIcon },
+  { to: '/history', label: m.nav_history, icon: HistoryIcon },
   { to: '/chat', label: m.nav_chat, icon: MessageSquareIcon },
   { to: '/settings', label: m.nav_settings, icon: SettingsIcon },
 ] as const
