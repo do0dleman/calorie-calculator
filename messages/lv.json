@@ -62,5 +62,6 @@
   "history_empty": "Vēl nav reģistrētu ēdienreižu",
   "overview_protein_short": "Olbalt.",
   "overview_fat_short": "Tauki",
-  "overview_carbs_short": "Ogļh."
+  "overview_carbs_short": "Ogļh.",
+  "history_total": "Kopā"
 }

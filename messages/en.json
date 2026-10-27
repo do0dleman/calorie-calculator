@@ -62,5 +62,6 @@
   "history_empty": "No meals logged yet",
   "overview_protein_short": "Protein",
   "overview_fat_short": "Fat",
-  "overview_carbs_short": "Carbs"
+  "overview_carbs_short": "Carbs",
+  "history_total": "Total"
 }

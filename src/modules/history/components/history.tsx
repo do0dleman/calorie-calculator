@@ -5,6 +5,7 @@ import { Skeleton } from '#/components/ui/skeleton'
 import { mealHistoryQueryOptions } from '#/modules/history/history.functions'
 import { dayKey, groupMealsByDay } from '#/modules/history/utils'
 import type { MealDay } from '#/modules/history/utils'
+import { MacroTotals } from '#/modules/overview/components/macro_totals'
 import { MealTable } from '#/modules/overview/components/meal_table'
 import { MealTimeline } from '#/modules/overview/components/meal_timeline'
 import {
@@ -59,10 +60,11 @@ function DayCard({ day }: { day: MealDay }) {
       </div>
       {/* Phones get a timeline; wider screens keep the aligned table. */}
       <div className="md:hidden">
-        <MealTimeline meals={day.meals} totals={day.totals} />
+        <MacroTotals totals={day.totals} />
+        <MealTimeline meals={day.meals} />
       </div>
       <div className="hidden md:block">
-        <MealTable meals={day.meals} />
+        <MealTable meals={day.meals} totals={day.totals} />
       </div>
     </Card>
   )

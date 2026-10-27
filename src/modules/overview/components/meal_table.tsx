@@ -1,15 +1,25 @@
 import { MACROS } from '#/modules/overview/nutrients'
-import type { DailyMeal } from '#/modules/overview/types'
+import type { DailyMeal, Nutrient } from '#/modules/overview/types'
 import { formatAmount } from '#/modules/overview/utils'
+import { m } from '#/paraglide/messages'
 import { getLocale } from '#/paraglide/runtime'
+
+import { NutrientDot } from './nutrient_dot'
 
 const MACRO_COLUMNS = ['col-start-3', 'col-start-4', 'col-start-5'] as const
 
 // Wide-screen layout of a day's meals: one line per meal. Rows share the
 // parent's columns (subgrid), so the numbers line up like a table. Fixed column
 // widths keep separate cards aligned with each other. Shared by Overview and
-// History; phones use MealTimeline instead.
-export function MealTable({ meals }: { meals: Array<DailyMeal> }) {
+// History; phones use MealTimeline instead. With `totals`, a bold total row
+// closes the table (History).
+export function MealTable({
+  meals,
+  totals,
+}: {
+  meals: Array<DailyMeal>
+  totals?: Record<Nutrient, number>
+}) {
   const timeFormat = new Intl.DateTimeFormat(getLocale(), {
     timeStyle: 'short',
   })
@@ -27,8 +37,9 @@ export function MealTable({ meals }: { meals: Array<DailyMeal> }) {
           <span
             key={macro.key}
             role="columnheader"
-            className={`${MACRO_COLUMNS[index]} text-right`}
+            className={`${MACRO_COLUMNS[index]} flex items-center justify-end gap-1.5`}
           >
+            <NutrientDot nutrient={macro} />
             {macro.label()}
           </span>
         ))}
@@ -71,6 +82,33 @@ export function MealTable({ meals }: { meals: Array<DailyMeal> }) {
           </span>
         </div>
       ))}
+
+      {totals ? (
+        <div
+          role="row"
+          className="col-span-full mt-1 grid grid-cols-subgrid items-baseline border-t-2 border-foreground/70 pt-3 text-base font-bold tabular-nums"
+        >
+          <span role="rowheader" className="col-start-2">
+            {m.history_total()}
+          </span>
+          {MACROS.map((macro) => (
+            <span
+              key={macro.key}
+              role="cell"
+              className="text-right whitespace-nowrap"
+            >
+              {formatAmount(totals[macro.key])}
+              <span className="text-xs font-normal text-muted-foreground">
+                {' '}
+                g
+              </span>
+            </span>
+          ))}
+          <span role="cell" className="text-right whitespace-nowrap">
+            {formatAmount(totals.calories)}
+          </span>
+        </div>
+      ) : null}
     </div>
   )
 }
