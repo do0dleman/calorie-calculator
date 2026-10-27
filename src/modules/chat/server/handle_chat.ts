@@ -89,7 +89,7 @@ export async function handleChatPost(request: Request) {
   }> = []
 
   const stream = chat({
-    adapter: geminiText('gemini-3.5-flash'),
+    adapter: geminiText('gemini-3.1-flash-lite'),
     messages: geminiMessages,
     systemPrompts: [SYSTEM_PROMPT],
     tools: [logMeal, getTodaysMeals],
