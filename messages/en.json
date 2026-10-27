@@ -59,5 +59,8 @@
   "nav_history": "History",
   "history_title": "History",
   "history_today": "Today",
-  "history_empty": "No meals logged yet"
+  "history_empty": "No meals logged yet",
+  "overview_protein_short": "Protein",
+  "overview_fat_short": "Fat",
+  "overview_carbs_short": "Carbs"
 }

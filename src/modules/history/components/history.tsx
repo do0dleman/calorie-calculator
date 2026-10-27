@@ -5,7 +5,7 @@ import { Skeleton } from '#/components/ui/skeleton'
 import { mealHistoryQueryOptions } from '#/modules/history/history.functions'
 import { dayKey, groupMealsByDay } from '#/modules/history/utils'
 import type { MealDay } from '#/modules/history/utils'
-import { MealItem } from '#/modules/overview/components/meal_item'
+import { MealTable } from '#/modules/overview/components/meal_table'
 import {
   formatAmount,
   formatDate,
@@ -53,11 +53,7 @@ function DayCard({ day }: { day: MealDay }) {
           {formatAmount(day.calories)} kcal
         </p>
       </div>
-      <ol className="mt-1 divide-y divide-border">
-        {day.meals.map((meal) => (
-          <MealItem key={meal.id} meal={meal} />
-        ))}
-      </ol>
+      <MealTable meals={day.meals} />
     </Card>
   )
 }

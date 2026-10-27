@@ -59,5 +59,8 @@
   "nav_history": "Vēsture",
   "history_title": "Vēsture",
   "history_today": "Šodien",
-  "history_empty": "Vēl nav reģistrētu ēdienreižu"
+  "history_empty": "Vēl nav reģistrētu ēdienreižu",
+  "overview_protein_short": "Olbalt.",
+  "overview_fat_short": "Tauki",
+  "overview_carbs_short": "Ogļh."
 }

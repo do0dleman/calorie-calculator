@@ -2,7 +2,7 @@ import { Card } from '#/components/ui/card'
 import type { DailyMeal } from '#/modules/overview/types'
 import { m } from '#/paraglide/messages'
 
-import { MealItem } from './meal_item'
+import { MealTable } from './meal_table'
 
 export function MealList({ meals }: { meals: Array<DailyMeal> }) {
   return (
@@ -20,11 +20,7 @@ export function MealList({ meals }: { meals: Array<DailyMeal> }) {
           {m.overview_empty()}
         </p>
       ) : (
-        <ol className="mt-1 divide-y divide-border">
-          {meals.map((meal) => (
-            <MealItem key={meal.id} meal={meal} />
-          ))}
-        </ol>
+        <MealTable meals={meals} />
       )}
     </Card>
   )
