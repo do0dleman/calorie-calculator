@@ -52,7 +52,7 @@ export function MealChat() {
   }
 
   return (
-    <div className="mx-auto flex h-[calc(100dvh-4.25rem)] w-full max-w-2xl flex-col bg-background text-foreground sm:h-[calc(100dvh-4.75rem)]">
+    <div className="mx-auto flex h-[calc(100dvh-7.25rem)] md:h-[calc(100dvh-4.25rem)] w-full max-w-2xl flex-col bg-background text-foreground sm:h-[calc(100dvh-4.75rem)]">
       <MessageList messages={messages} />
       <Composer
         input={input}
