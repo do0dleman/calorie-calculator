@@ -31,7 +31,9 @@ function MealChatSession({
   const queryClient = useQueryClient()
   const [input, setInput] = useState('')
   const [pending, setPending] = useState<PendingImage | null>(null)
+  const [preparing, setPreparing] = useState(false)
   const urlsRef = useRef<string[]>([])
+  const sendingRef = useRef(false)
 
   const { messages, sendMessage, setMessages, status, error } = useChat({
     connection: fetchServerSentEvents('/api/chat'),
@@ -69,39 +71,49 @@ function MealChatSession({
     })
   }
 
+  const busy =
+    preparing || status === 'submitted' || status === 'streaming'
+
   async function send() {
     const text = input.trim()
-    const busy = status === 'submitted' || status === 'streaming'
-    if ((!text && !pending) || busy) return
+    if ((!text && !pending) || busy || sendingRef.current) return
 
-    const range = todayRange()
-    const parts: Array<ContentPart> = []
+    sendingRef.current = true
+    setPreparing(true)
 
-    if (pending) {
-      const image = await fileToBase64(pending.file)
-      parts.push({
-        type: 'image',
-        source: {
-          type: 'data',
-          value: image.value,
-          mimeType: image.mimeType,
-        },
-      })
+    try {
+      const range = todayRange()
+      const parts: Array<ContentPart> = []
+
+      if (pending) {
+        const image = await fileToBase64(pending.file)
+        parts.push({
+          type: 'image',
+          source: {
+            type: 'data',
+            value: image.value,
+            mimeType: image.mimeType,
+          },
+        })
+      }
+      if (text) parts.push({ type: 'text', content: text })
+
+      setInput('')
+      clearPending()
+
+      await sendMessage(
+        { content: parts },
+        { body: { dayFrom: range.from, dayTo: range.to } },
+      )
+    } finally {
+      sendingRef.current = false
+      setPreparing(false)
     }
-    if (text) parts.push({ type: 'text', content: text })
-
-    setInput('')
-    clearPending()
-
-    await sendMessage(
-      { content: parts },
-      { body: { dayFrom: range.from, dayTo: range.to } },
-    )
   }
 
   return (
     <div className="mx-auto flex h-[calc(100dvh-7.25rem)] md:h-[calc(100dvh-4.25rem)] w-full max-w-2xl flex-col bg-background text-foreground sm:h-[calc(100dvh-4.75rem)]">
-      <MessageList messages={messages} />
+      <MessageList messages={messages} busy={busy} />
       {error ? (
         <p className="px-4 pb-2 text-sm text-destructive" role="alert">
           {error.message}
@@ -110,7 +122,7 @@ function MealChatSession({
       <Composer
         input={input}
         pending={pending}
-        disabled={status === 'submitted' || status === 'streaming'}
+        disabled={busy}
         onInput={setInput}
         onPick={chooseImage}
         onClearPending={clearPending}

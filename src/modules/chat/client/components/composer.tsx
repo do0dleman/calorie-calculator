@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import type { UIMessage } from '@tanstack/ai-react'
-import { Send, X } from 'lucide-react'
+import { LoaderCircle, Send, X } from 'lucide-react'
 
 import { Button } from '#/components/ui/button'
 import type { PendingImage } from '#/modules/chat/client/types'
@@ -98,9 +98,9 @@ export function Composer({
           type="submit"
           size="icon"
           disabled={!canSend}
-          aria-label="Send"
+          aria-label={disabled ? 'Waiting for a reply' : 'Send'}
         >
-          <Send />
+          {disabled ? <LoaderCircle className="animate-spin" /> : <Send />}
         </Button>
       </div>
     </form>
