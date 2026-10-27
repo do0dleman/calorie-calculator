@@ -14,6 +14,8 @@ import {
 } from '#/modules/overview/utils'
 import { m } from '#/paraglide/messages'
 
+import { MealTimeline } from './meal_timeline'
+
 export function History() {
   const { data: meals } = useSuspenseQuery(mealHistoryQueryOptions())
   const days = groupMealsByDay(meals)
@@ -49,11 +51,20 @@ function DayCard({ day }: { day: MealDay }) {
             {isToday ? formatFullDate(day.date) : formatWeekday(day.date)}
           </p>
         </div>
-        <p className="text-sm whitespace-nowrap text-muted-foreground tabular-nums">
-          {formatAmount(day.calories)} kcal
+        <p className="whitespace-nowrap tabular-nums">
+          <span className="text-lg font-semibold">
+            {formatAmount(day.totals.calories)}
+          </span>{' '}
+          <span className="text-xs text-muted-foreground">kcal</span>
         </p>
       </div>
-      <MealTable meals={day.meals} />
+      {/* Phones get a timeline; wider screens keep the aligned table. */}
+      <div className="md:hidden">
+        <MealTimeline meals={day.meals} totals={day.totals} />
+      </div>
+      <div className="hidden md:block">
+        <MealTable meals={day.meals} />
+      </div>
     </Card>
   )
 }

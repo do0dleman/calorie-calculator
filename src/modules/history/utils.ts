@@ -1,9 +1,9 @@
-import type { DailyMeal } from '#/modules/overview/types'
+import type { DailyMeal, Nutrient } from '#/modules/overview/types'
 
 export type MealDay = {
   key: string
   date: Date
-  calories: number
+  totals: Record<Nutrient, number>
   meals: Array<DailyMeal>
 }
 
@@ -23,11 +23,19 @@ export function groupMealsByDay(meals: Array<DailyMeal>): Array<MealDay> {
     const key = dayKey(meal.createdAt)
     let day = days.at(-1)
     if (day?.key !== key) {
-      day = { key, date: meal.createdAt, calories: 0, meals: [] }
+      day = {
+        key,
+        date: meal.createdAt,
+        totals: { calories: 0, protein: 0, fat: 0, carbs: 0 },
+        meals: [],
+      }
       days.push(day)
     }
     day.meals.unshift(meal)
-    day.calories += meal.calories
+    day.totals.calories += meal.calories
+    day.totals.protein += meal.protein
+    day.totals.fat += meal.fat
+    day.totals.carbs += meal.carbs
   }
 
   return days

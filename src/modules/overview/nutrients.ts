@@ -38,4 +38,9 @@ export const NUTRIENTS = [
 
 export type NutrientInfo = (typeof NUTRIENTS)[number]
 
+// CSS color that follows the page theme (the theme toggle sets color-scheme).
+export function nutrientColor(nutrient: NutrientInfo) {
+  return `light-dark(${nutrient.color.light}, ${nutrient.color.dark})`
+}
+
 export const [CALORIES, ...MACROS] = NUTRIENTS
