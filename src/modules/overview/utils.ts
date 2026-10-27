@@ -24,9 +24,33 @@ export function formatFullDate(date: Date) {
     return new Intl.DateTimeFormat(locale, { dateStyle: 'full' }).format(date)
   }
 
-  const parts = Object.fromEntries(
+  return `${formatWeekday(date)}, ${formatDate(date)}`
+}
+
+// Date without the weekday: "26. oktobris 2026. gads" / "October 26, 2026".
+export function formatDate(date: Date) {
+  const locale = getLocale()
+
+  if (locale !== 'lv') {
+    return new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(date)
+  }
+
+  const parts = latvianDateParts(date)
+  return `${parts.day}. ${parts.month} ${parts.year}. gads`
+}
+
+// Capitalised weekday: "Pirmdiena" / "Monday".
+export function formatWeekday(date: Date) {
+  const weekday = new Intl.DateTimeFormat(getLocale(), {
+    weekday: 'long',
+  }).format(date)
+
+  return weekday.charAt(0).toUpperCase() + weekday.slice(1)
+}
+
+function latvianDateParts(date: Date) {
+  return Object.fromEntries(
     new Intl.DateTimeFormat('lv', {
-      weekday: 'long',
       day: 'numeric',
       month: 'long',
       year: 'numeric',
@@ -34,9 +58,6 @@ export function formatFullDate(date: Date) {
       .formatToParts(date)
       .map((part) => [part.type, part.value]),
   )
-  const weekday = parts.weekday.charAt(0).toUpperCase() + parts.weekday.slice(1)
-
-  return `${weekday}, ${parts.day}. ${parts.month} ${parts.year}. gads`
 }
 
 export function formatAmount(value: number) {

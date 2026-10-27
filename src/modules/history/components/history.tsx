@@ -6,7 +6,12 @@ import { mealHistoryQueryOptions } from '#/modules/history/history.functions'
 import { dayKey, groupMealsByDay } from '#/modules/history/utils'
 import type { MealDay } from '#/modules/history/utils'
 import { MealItem } from '#/modules/overview/components/meal_item'
-import { formatAmount, formatFullDate } from '#/modules/overview/utils'
+import {
+  formatAmount,
+  formatDate,
+  formatFullDate,
+  formatWeekday,
+} from '#/modules/overview/utils'
 import { m } from '#/paraglide/messages'
 
 export function History() {
@@ -33,11 +38,18 @@ function DayCard({ day }: { day: MealDay }) {
 
   return (
     <Card className="gap-0 p-4 sm:p-6">
-      <div className="flex items-baseline justify-between gap-3">
-        <h2 className="font-semibold">
-          {isToday ? m.history_today() : formatFullDate(day.date)}
-        </h2>
-        <p className="shrink-0 text-sm whitespace-nowrap text-muted-foreground tabular-nums">
+      {/* Date on top, weekday underneath, so long Latvian dates don't wrap mid-phrase.
+          On very narrow screens the day total drops below instead of squeezing the date. */}
+      <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
+        <div>
+          <h2 className="font-semibold">
+            {isToday ? m.history_today() : formatDate(day.date)}
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            {isToday ? formatFullDate(day.date) : formatWeekday(day.date)}
+          </p>
+        </div>
+        <p className="text-sm whitespace-nowrap text-muted-foreground tabular-nums">
           {formatAmount(day.calories)} kcal
         </p>
       </div>
