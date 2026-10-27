@@ -42,5 +42,18 @@
   "language_switch": "Switch to Latvian",
   "nav_overview": "Overview",
   "nav_chat": "Chat",
-  "nav_settings": "Settings"
+  "nav_settings": "Settings",
+  "overview_title": "Today",
+  "overview_calories": "Calories",
+  "overview_protein": "Protein",
+  "overview_fat": "Fat",
+  "overview_carbs": "Carbs",
+  "overview_empty": "No meals logged today",
+  "overview_meals_title": "Today's meals",
+  "overview_eaten": "Eaten",
+  "overview_remaining": "Remaining",
+  "overview_goal_note": "Goals are fixed for now: EU reference intakes for an average adult.",
+  "overview_of_goal": "of {goal} {unit} goal",
+  "overview_left": "{amount} {unit} left",
+  "overview_over": "{amount} {unit} over goal"
 }

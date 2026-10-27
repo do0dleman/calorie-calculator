@@ -1,9 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_protected/overview')({
-  component: RouteComponent,
-})
+import { Overview, OverviewSkeleton, loadOverview } from '#/modules/overview'
 
-function RouteComponent() {
-  return <div>Hello "/_protected/overview"!</div>
-}
+export const Route = createFileRoute('/_protected/overview')({
+  // Run the loader in the browser so "today" uses the user's local timezone.
+  ssr: false,
+  loader: ({ context }) => loadOverview(context.queryClient),
+  pendingComponent: OverviewSkeleton,
+  component: Overview,
+})

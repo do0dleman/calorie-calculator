@@ -1,0 +1,1 @@
+CREATE INDEX "meal_userId_createdAt_idx" ON "meal" USING btree ("user_id","created_at");

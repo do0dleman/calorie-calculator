@@ -22,6 +22,13 @@
       "when": 1793006295800,
       "tag": "0002_deep_molly_hayes",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793033181413,
+      "tag": "0003_violet_wonder_man",
+      "breakpoints": true
     }
   ]
 }
