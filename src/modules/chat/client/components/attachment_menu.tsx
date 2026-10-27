@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
 import { Camera, ImageIcon, PenLine, Plus } from 'lucide-react'
 
@@ -18,6 +19,7 @@ export function AttachmentMenu({ onPick }: { onPick: (file: File) => void }) {
   const cameraRef = useRef<HTMLInputElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const [mealOpen, setMealOpen] = useState(false)
+  const queryClient = useQueryClient()
   const saveMeal = useServerFn(createManualMeal)
 
   function onPicked(event: ChangeEvent<HTMLInputElement>) {
@@ -74,8 +76,12 @@ export function AttachmentMenu({ onPick }: { onPick: (file: File) => void }) {
       <ManualMealDialog
         open={mealOpen}
         onOpenChange={setMealOpen}
-        onCreate={async (meal) => {
+        onSubmit={async (meal) => {
           await saveMeal({ data: meal })
+          await Promise.all([
+            queryClient.invalidateQueries({ queryKey: ['daily-meals'] }),
+            queryClient.invalidateQueries({ queryKey: ['daily-totals'] }),
+          ])
         }}
       />
     </>
