@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import type { UIMessage } from '@tanstack/ai-react'
 import { ImageIcon } from 'lucide-react'
+import { Streamdown } from 'streamdown'
 
 import type { LoggedMeal } from '#/modules/meal/meal.functions'
 
@@ -38,6 +39,11 @@ export function MessageList({
 
 function MessageBubble({ message }: { message: UIMessage }) {
   const isUser = message.role === 'user'
+  const hasLoggedMeal = message.parts.some(
+    (part) =>
+      (part.type === 'tool-call' || part.type === 'tool-result') &&
+      part.name === 'logMeal',
+  )
 
   return (
     <div
@@ -51,16 +57,21 @@ function MessageBubble({ message }: { message: UIMessage }) {
         }
 
         if (part.type === 'text' && part.content) {
+          if (!isUser && hasLoggedMeal) return null
           return (
             <div
               key={`${message.id}-text-${index}`}
-              className={`rounded-2xl px-3 py-2 text-sm whitespace-pre-wrap ${
+              className={`rounded-2xl px-3 py-2 text-sm ${
                 isUser
-                  ? 'bg-primary text-primary-foreground'
+                  ? 'bg-primary text-primary-foreground whitespace-pre-wrap'
                   : 'bg-muted text-foreground'
               }`}
             >
-              {part.content}
+              {isUser ? (
+                part.content
+              ) : (
+                <Streamdown>{part.content}</Streamdown>
+              )}
             </div>
           )
         }

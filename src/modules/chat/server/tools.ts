@@ -19,7 +19,7 @@ export type MealChatContext = {
 export const logMealDef = toolDefinition({
   name: 'logMeal',
   description:
-    'Save a meal the user ate. Call this when you can estimate the food from a photo or description. Always create a new meal, even if the photo looks like one you have seen before.',
+    'Save a meal the user ate. Call this when you can estimate the food from a photo or description. Always create a new meal, even if the photo looks like one you have seen before. After calling, do not write a confirmation or list macros — the client renders a meal card.',
   inputSchema: mealFieldsSchema,
   outputSchema: mealFieldsSchema.extend({
     id: z.string(),
