@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
 
@@ -13,7 +13,7 @@ import {
 } from '#/components/ui/dialog'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
-import type { ManualMeal } from '#/modules/chat/types'
+import type { ManualMeal } from '#/modules/chat/client/types'
 
 const nameSchema = z.string().trim().min(1, 'Enter a name')
 
@@ -33,30 +33,40 @@ const amountFields = [
   ['carbs', 'Carbs (g)'],
 ] as const
 
+function toFormValues(meal?: ManualMeal | null) {
+  return {
+    name: meal?.name ?? '',
+    calories: meal ? String(meal.caloriesKcal) : '',
+    protein: meal ? String(meal.proteinG) : '',
+    fat: meal ? String(meal.fatG) : '',
+    carbs: meal ? String(meal.carbsG) : '',
+  }
+}
+
 export function ManualMealDialog({
   open,
   onOpenChange,
-  onCreate,
+  onSubmit,
+  initial,
+  title = 'Add a meal',
+  submitLabel = 'Save meal',
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onCreate: (meal: ManualMeal) => Promise<void>
+  onSubmit: (meal: ManualMeal) => Promise<void>
+  initial?: ManualMeal | null
+  title?: string
+  submitLabel?: string
 }) {
   const [formError, setFormError] = useState<string | null>(null)
 
   const form = useForm({
-    defaultValues: {
-      name: '',
-      calories: '',
-      protein: '',
-      fat: '',
-      carbs: '',
-    },
+    defaultValues: toFormValues(initial),
     onSubmit: async ({ value, formApi }) => {
       setFormError(null)
 
       try {
-        await onCreate({
+        await onSubmit({
           name: value.name.trim(),
           caloriesKcal: Number(value.calories),
           proteinG: Number(value.protein),
@@ -70,16 +80,22 @@ export function ManualMealDialog({
         return
       }
 
-      formApi.reset()
+      formApi.reset(toFormValues(initial))
       onOpenChange(false)
     },
   })
+
+  useEffect(() => {
+    if (!open) return
+    setFormError(null)
+    form.reset(toFormValues(initial))
+  }, [open, initial, form])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add a meal</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <form
           className="flex flex-col gap-4"
@@ -166,7 +182,7 @@ export function ManualMealDialog({
             <form.Subscribe selector={(state) => state.isSubmitting}>
               {(isSubmitting) => (
                 <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? 'Saving…' : 'Save meal'}
+                  {isSubmitting ? 'Saving…' : submitLabel}
                 </Button>
               )}
             </form.Subscribe>

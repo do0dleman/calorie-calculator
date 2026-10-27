@@ -7,6 +7,7 @@ export const env = createEnv({
     DATABASE_URL: z.url(),
     BETTER_AUTH_URL: z.url().optional(),
     VERCEL_URL: z.string().optional(),
+    GOOGLE_API_KEY: z.string().min(1).optional(),
   },
 
   /**

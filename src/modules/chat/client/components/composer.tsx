@@ -1,28 +1,33 @@
 import { useRef } from 'react'
-import { Send, X } from 'lucide-react'
+import type { UIMessage } from '@tanstack/ai-react'
+import { LoaderCircle, Send, X } from 'lucide-react'
 
 import { Button } from '#/components/ui/button'
-import type { PendingImage } from '#/modules/chat/types'
+import type { PendingImage } from '#/modules/chat/client/types'
 
 import { AttachmentMenu } from './attachment_menu'
 
 export function Composer({
   input,
   pending,
+  disabled,
   onInput,
   onPick,
   onClearPending,
   onSend,
+  onLoggedMeal,
 }: {
   input: string
   pending: PendingImage | null
+  disabled?: boolean
   onInput: (value: string) => void
   onPick: (file: File) => void
   onClearPending: () => void
   onSend: () => void
+  onLoggedMeal: (message: UIMessage) => void
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const canSend = input.trim().length > 0 || pending !== null
+  const canSend = !disabled && (input.trim().length > 0 || pending !== null)
 
   function resizeTextarea() {
     const textarea = textareaRef.current
@@ -68,13 +73,14 @@ export function Composer({
       ) : null}
 
       <div className="flex items-end gap-2">
-        <AttachmentMenu onPick={onPick} />
+        <AttachmentMenu onPick={onPick} onLoggedMeal={onLoggedMeal} />
 
         <textarea
           ref={textareaRef}
           value={input}
           rows={1}
           placeholder="Describe a meal..."
+          disabled={disabled}
           className="max-h-30 min-h-9 flex-1 resize-none rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
           onChange={(event) => {
             onInput(event.target.value)
@@ -88,7 +94,12 @@ export function Composer({
           }}
         />
 
-        <Button type="submit" size="icon" disabled={!canSend} aria-label="Send">
+        <Button
+          type="submit"
+          size="icon"
+          disabled={!canSend}
+          aria-label={disabled ? 'Waiting for a reply' : 'Send'}
+        >
           <Send />
         </Button>
       </div>
